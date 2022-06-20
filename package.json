@@ -13,7 +13,7 @@
     "**/*.less": "stylelint --syntax less",
     "**/*.vue": "eslint --ext .vue",
     "**/*.{js,jsx,ts,tsx}": "eslint --ext .js,.jsx,.ts,.tsx",
-    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+    "**/*.{js,jsx,tsx,ts,less,md,json,vue}": [
       "prettier --write",
       "git add"
     ]

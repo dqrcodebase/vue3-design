@@ -9,14 +9,14 @@
     "prettier": "npx prettier --write .",
     "prepare": "husky install"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
-    "src/**/*.js": "npm run lint"
-  },   
+    "**/*.less": "stylelint --syntax less",
+    "**/*.{js,jsx,ts,tsx}": "eslint --ext .js,.jsx,.ts,.tsx",
+    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^3.0.0",

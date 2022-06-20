@@ -6,9 +6,11 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "format": "npx prettier --write ."
+    "prettier": "npx prettier --write ."
   },
-  "pre-commit": ["prettier"],
+  "pre-commit": [
+    "prettier"
+  ],
   "dependencies": {
     "core-js": "^3.6.5",
     "prettier": "^2.7.1",

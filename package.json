@@ -14,7 +14,11 @@
     }
   },
   "lint-staged": {
-    "*.js": "eslint --fix"
+    "src/**/*.{js,vue}": [
+      "node -v",
+      "prettier --write",
+      "eslint --cache --fix"
+    ]
   },
   "dependencies": {
     "core-js": "^3.6.5",

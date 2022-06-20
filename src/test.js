@@ -4,7 +4,8 @@ const obj = {
   a: 1,
   b: 'fdsa',
   c: 'cccc',
-  d: "ddd",
-  e:"eeee"
+  d: 'ddd',
+  e: 'eeee',
+  f: 'fff',
 };
 console.log(str, arr, obj);

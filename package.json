@@ -6,20 +6,21 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "lint:lint-staged": "lint-staged",
     "prettier": "npx prettier --write .",
     "prepare": "husky install"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
-    "**/*.vue": "eslint --ext .vue",
-    "**/*.{js,jsx,ts,tsx}": "eslint --ext .js,.jsx,.ts,.tsx",
-    "**/*.{js,jsx,tsx,ts,less,md,json,vue}": [
+    "**/*.{js,ts,vue}": "eslint --ext .js,.ts,.vue",
+    "**/*.{js,ts,less,md,json,vue}": [
       "prettier --write",
       "git add"
     ]
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "element-plus": "^2.2.6",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

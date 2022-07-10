@@ -1,17 +1,6 @@
 <template>
   <div class="design-wrap-aside">
-    <div class="type-select-list">
-      <ul>
-        <li class="acitve">样版</li>
-        <li>画廊</li>
-        <li>知识产权</li>
-        <li>上传</li>
-      </ul>
-      <div>
-        <img src="" alt="" />
-        登录
-      </div>
-    </div>
+    <type-select-list />
     <div class="aside-list" :class="{ 'is-hide': asideIsMini }">
       <component :is="listComponent" />
       <div class="control-aside-size" @click="changeAsideSize">{{
@@ -23,35 +12,29 @@
 
 <script>
 import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
+import { useAsideStore } from '@/store/aside';
 import TemplateList from './TemplateList.vue';
+import TypeSelectList from './TypeSelectList.vue';
 
 export default {
-  components: { TemplateList },
+  components: { TemplateList, TypeSelectList },
   setup() {
     const listComponent = ref('TemplateList');
-    const store = useStore();
+    const asideStore = useAsideStore();
     function changeAsideSize() {
-      const asideIsMini = !store.state.asideIsMini;
-      store.commit('changeAsideIsMini', asideIsMini);
+      asideStore.asideIsMini = !asideStore.asideIsMini;
     }
     return {
       listComponent,
-      asideIsMini: computed(() => store.state.asideIsMini),
+      asideIsMini: computed(() => asideStore.asideIsMini),
       changeAsideSize,
-      store,
+      asideStore,
     };
   },
 };
 </script>
 
 <style scoped lang="less">
-.acitve {
-  color: var(--main-color);
-}
-.type-select-list {
-  height: 100%;
-}
 .design-wrap-aside {
   display: flex;
   height: 100%;

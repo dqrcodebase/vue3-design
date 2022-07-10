@@ -43,12 +43,12 @@ import {
   watch,
 } from 'vue';
 import ListComponent from '@/components/list.vue';
-import { useStore } from 'vuex';
+import { useAsideStore } from '@/store/aside';
 
 export default {
   components: { ListComponent },
   setup() {
-    const store = useStore();
+    const store = useAsideStore();
     const activeName = ref('recommend');
     const isGroup = ref(true);
     const noMore = ref(false);
@@ -66,7 +66,7 @@ export default {
       pageSize: 50,
       templateType: 1,
     });
-    const asideIsMini = computed(() => store.state.asideIsMini);
+    const asideIsMini = computed(() => store.asideIsMini);
     const { getData } = getCurrentInstance().appContext.config.globalProperties;
 
     function getTemplateListNew() {
@@ -107,11 +107,9 @@ export default {
       console.log(noGroupData);
     }
     function getMoreData() {
-      console.log('getMoreData');
       getTemplateList();
     }
     function groupItemList(item) {
-      console.log('groupItemList', item.items.slice(0, 4));
       const value = asideIsMini.value
         ? item.items.slice(0, 4)
         : item.items.slice(0, 12);

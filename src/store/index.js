@@ -1,14 +1,8 @@
-import { createStore } from 'vuex';
+import { createPinia } from 'pinia';
 
-export default createStore({
-  state: {
-    asideIsMini: true,
-  },
-  mutations: {
-    changeAsideIsMini(state, action) {
-      state.asideIsMini = action;
-    },
-  },
-  actions: {},
-  modules: {},
-});
+const store = createPinia();
+
+export function setupStore(app) {
+  app.use(store);
+}
+export { store };

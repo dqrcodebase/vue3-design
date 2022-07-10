@@ -7,11 +7,16 @@
         <el-main class="design-content">Main</el-main>
       </el-container>
     </el-container>
+    <login-dialog v-if="loginDialogState" />
   </div>
 </template>
 
 <script>
+import { computed } from 'vue';
+import { useUserStore } from '@/store/user';
+import { getCookie, getLocalStorage } from '@/utils/cache';
 import MainHeader from '@/components/MainHeader.vue';
+import LoginDialog from '@/components/LoginDialog.vue';
 import DesignAside from './components/DesignAside.vue';
 
 export default {
@@ -21,8 +26,23 @@ export default {
       msg: 'Welcome to Your Vue.js Ap',
     };
   },
-  components: { DesignAside, MainHeader },
-  setup() {},
+  components: { DesignAside, MainHeader, LoginDialog },
+  setup() {
+    const userStore = useUserStore();
+    const accessToken = getCookie('iyuanwu_token');
+    const userInfo = JSON.parse(getLocalStorage('userInfo'));
+    console.log(userInfo);
+    if (accessToken) {
+      if (userInfo) {
+        userStore.setUserInfo(userInfo);
+      } else {
+        userStore.getUserInfo();
+      }
+    }
+    return {
+      loginDialogState: computed(() => userStore.loginDialogState),
+    };
+  },
 };
 </script>
 <style lang="less" scoped>

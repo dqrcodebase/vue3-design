@@ -7,7 +7,7 @@
       :infinite-scroll-distance="200">
       <ul class="list">
         <li class="item" v-for="item in list" :key="item.tId">
-          <img class="cover" :src="item.cover" :alt="item.name" />
+          <img class="cover" v-lazy="item.cover" :alt="item.name" />
         </li>
       </ul>
       <div class="list-footer" v-if="isShowFooter">
@@ -70,6 +70,9 @@ export default {
   vertical-align: middle;
   border-radius: 3px;
   margin-bottom: 12px;
+  border: 1px solid #eee;
+  box-sizing: border-box;
+  border-radius: 50%;
   img {
     border-radius: 3px;
   }

@@ -33,17 +33,13 @@
 
 <script>
 import { ref, reactive, getCurrentInstance } from 'vue';
-import { CircleCloseFilled } from '@element-plus/icons-vue';
 import { useUserStore } from '@/store/user';
 
 export default {
-  components: { CircleCloseFilled },
   setup() {
     const userStore = useUserStore();
     const { globalProperties } = getCurrentInstance().appContext.config;
-
     const { $message } = globalProperties;
-
     const visible = ref(true);
     const formInline = reactive({
       equipment: 'pc',
@@ -52,9 +48,11 @@ export default {
       phone: '',
     });
     const loading = ref(false);
+
     function close() {
       userStore.loginDialogState = false;
     }
+
     async function onSubmit() {
       loading.value = true;
       userStore.login(formInline).then((res) => {

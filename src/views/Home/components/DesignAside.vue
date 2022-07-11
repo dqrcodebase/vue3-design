@@ -3,9 +3,9 @@
     <type-select-list />
     <div class="aside-list" :class="{ 'is-hide': asideIsMini }">
       <component :is="listComponent" />
-      <div class="control-aside-size" @click="changeAsideSize">{{
-        asideIsMini
-      }}</div>
+      <div class="control-aside-size" @click="changeAsideSize">
+        <el-icon :size="20" color="#657097"><CaretRight /></el-icon
+      ></div>
     </div>
   </div>
 </template>
@@ -46,6 +46,7 @@ export default {
   height: 100%;
   box-sizing: border-box;
   position: relative;
+  z-index: 2;
   &.is-hide {
     width: 310px;
   }
@@ -53,7 +54,16 @@ export default {
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
-    right: -20px;
+    right: -30px;
+    width: 42px;
+    height: 100px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background: #000000;
+    z-index: -1;
+    border-radius: 10px;
+    padding: 0px 7px;
   }
 }
 </style>

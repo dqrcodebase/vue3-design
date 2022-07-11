@@ -6,15 +6,19 @@
       <li class="type-select-item">IP</li>
       <li class="type-select-item">上传</li>
     </ul>
-    <div
-      class="login-button"
-      @click="loginHandle"
-      v-if="!userInfo.smallHeadImg">
-      <img class="login-img" src="@/assets/images/home/loginHead.png" alt="" />
-      <div>登录</div>
-    </div>
-    <div v-else class="login-button">
-      <img class="login-img" :src="userInfo.smallHeadImg" alt="头像" />
+    <div class="login-button">
+      <div @click="loginHandle" v-if="!userInfo.smallHeadImg">
+        <img
+          class="login-img"
+          src="@/assets/images/home/loginHead.png"
+          alt="" />
+        <div>登录</div>
+      </div>
+      <div v-else>
+        <aside-dropdown>
+          <img class="login-img" :src="userInfo.smallHeadImg" alt="头像" />
+        </aside-dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -22,8 +26,10 @@
 <script>
 import { useUserStore } from '@/store/user';
 import { computed } from 'vue';
+import AsideDropdown from './AsideDropdown.vue';
 
 export default {
+  components: { AsideDropdown },
   setup() {
     const userStore = useUserStore();
 

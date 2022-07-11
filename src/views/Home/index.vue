@@ -21,18 +21,12 @@ import DesignAside from './components/DesignAside.vue';
 
 export default {
   name: 'Home',
-  data() {
-    return {
-      msg: 'Welcome to Your Vue.js Ap',
-    };
-  },
   components: { DesignAside, MainHeader, LoginDialog },
   setup() {
     const userStore = useUserStore();
     const accessToken = getCookie('iyuanwu_token');
-    const userInfo = JSON.parse(getLocalStorage('userInfo'));
-    console.log(userInfo);
     if (accessToken) {
+      const userInfo = JSON.parse(getLocalStorage('userInfo'));
       if (userInfo) {
         userStore.setUserInfo(userInfo);
       } else {

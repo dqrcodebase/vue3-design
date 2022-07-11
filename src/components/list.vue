@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar>
+  <el-scrollbar class="list-scrollbar">
     <div
       v-infinite-scroll="load"
       :infinite-scroll-disabled="noMore"
@@ -72,7 +72,6 @@ export default {
   margin-bottom: 12px;
   border: 1px solid #eee;
   box-sizing: border-box;
-  border-radius: 50%;
   img {
     border-radius: 3px;
   }
@@ -80,7 +79,11 @@ export default {
 .el-scrollbar {
   overflow: initial;
 }
-.el-scrollbar__bar {
-  right: 8px;
+.el-scrollbar {
+  &.list-scrollbar {
+    /deep/.el-scrollbar__bar {
+      right: -20px;
+    }
+  }
 }
 </style>

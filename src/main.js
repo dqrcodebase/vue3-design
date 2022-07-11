@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import ElementPlus from 'element-plus';
+import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import VueLazyload from 'vue-lazyload';
 import 'element-plus/dist/index.css';
 import '@/assets/style/common.less';
@@ -10,9 +11,9 @@ import { setupRouter } from '@/router';
 import { setupStore } from '@/store/index';
 import App from './App.vue';
 
-// const app = createApp(App);
+const errorImg = require('./assets/images/common/loading-err.png');
+const workdefaultImg = require('./assets/images/common/workdefault.png');
 
-// app.use(store).use(router).use(ElementPlus).mount('#app');
 function bootstrap() {
   const app = createApp(App);
 
@@ -23,12 +24,16 @@ function bootstrap() {
   // Configure routing
   // 配置路由
   setupRouter(app);
+  // 注册elemnet中的所有图标
+  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component);
+  }
   app.config.globalProperties.getData = getData;
   app
     .use(ElementPlus)
     .use(VueLazyload, {
-      error: require('./assets/images/common/loading-err.png'),
-      loading: require('./assets/images/common/workdefault.png'),
+      error: errorImg,
+      loading: workdefaultImg,
     })
     .mount('#app');
 }

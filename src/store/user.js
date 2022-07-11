@@ -2,6 +2,7 @@ import { store } from '@/store';
 import { defineStore } from 'pinia';
 import getData from '@/api/index';
 import { setCookie, setLocalStorage } from '@/utils/cache';
+import { ElMessage } from 'element-plus';
 
 export const useUserStore = defineStore({
   id: 'app-user',
@@ -10,7 +11,7 @@ export const useUserStore = defineStore({
     loginDialogState: false,
   }),
   actions: {
-    setAuthInfo({ accessToken, refreshToken, validitySecond }) {
+    setToken({ accessToken, refreshToken, validitySecond }) {
       const expiresTime = validitySecond / 60 / 60 / 24; // validitySecond单位是秒转换为单位是天
       setCookie('iyuanwu_token', accessToken, { expires: expiresTime });
       setCookie('iyuanwu_refreshToken', refreshToken, { expires: 15 });
@@ -18,6 +19,10 @@ export const useUserStore = defineStore({
     },
     async getUserInfo() {
       const userData = await getData('GetUserInfo');
+      if (userData.code !== 1) {
+        ElMessage.error(userData.msg);
+        return;
+      }
       const userInfo = userData.rs;
       this.setUserInfo(userInfo);
     },
@@ -38,8 +43,8 @@ export const useUserStore = defineStore({
             refresh_token: refreshToken,
             validitySecond,
           } = loginData?.rs;
-          this.setAuthInfo({ accessToken, refreshToken, validitySecond });
-          this.setUserInfo();
+          this.setToken({ accessToken, refreshToken, validitySecond });
+          this.getUserInfo();
           resolve(res);
         });
       });

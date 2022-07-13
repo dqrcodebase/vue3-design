@@ -1,5 +1,6 @@
 <template>
   <el-scrollbar class="list-scrollbar">
+    <slot></slot>
     <div
       v-infinite-scroll="load"
       :infinite-scroll-disabled="noMore"
@@ -44,7 +45,6 @@ export default {
   emits: ['load'],
   setup() {
     function load() {
-      console.log('load');
       this.$emit('load');
     }
     return {
@@ -60,6 +60,7 @@ export default {
   justify-content: space-between;
   grid-template-columns: repeat(auto-fill, 120px);
   grid-gap: 0 12px;
+  padding-top: 20px;
 }
 .list-footer {
   text-align: center;

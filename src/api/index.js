@@ -1,11 +1,18 @@
 import request from '@/utils/request';
+import { getCookie } from '@/utils/cache';
 import { tuapi, tuOd, worksapi } from './config/index';
 
 export default function (method, data, requestType = 'post') {
+  const accessToken = getCookie('iyuanwu_token');
+
   const config = {
     data,
     method: requestType,
+    headers: {},
   };
+  if (accessToken) {
+    config.headers.token = accessToken;
+  }
   if (tuapi[method]) {
     config.url = `${process.env.VUE_APP_TUAPI}${tuapi[method]}`;
   }

@@ -55,18 +55,17 @@ export default {
 
     async function onSubmit() {
       loading.value = true;
-      userStore.login(formInline).then((res) => {
-        loading.value = false;
-        if (res.code === 1) {
-          close();
-        } else {
-          $message({
-            showClose: true,
-            message: res.msg,
-            type: 'error',
-          });
-        }
-      });
+      const res = await userStore.login(formInline);
+      loading.value = false;
+      if (res.code === 1) {
+        close();
+      } else {
+        $message({
+          showClose: true,
+          message: res.msg,
+          type: 'error',
+        });
+      }
     }
 
     return {

@@ -1,19 +1,13 @@
 import Axios from 'axios';
-import { getCookie } from '@/utils/cache';
 
 const server = Axios.create({
   timeout: 6000,
 });
-const accessToken = getCookie('iyuanwu_token');
-if (accessToken) {
-  server.defaults.headers.token = accessToken;
-}
 
 server.interceptors.request.use(
   (config) => {
     // do something before request is sent
     console.log(server.defaults.headers);
-
     return config;
   },
   (error) => {

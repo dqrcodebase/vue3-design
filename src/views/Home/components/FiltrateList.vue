@@ -30,6 +30,7 @@ export default {
     color: #696c77;
     width: 24px;
     margin-left: 8px;
+    cursor: pointer;
     .filtrate-text {
       font-size: 12px;
       line-height: 16px;

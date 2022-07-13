@@ -1,7 +1,12 @@
 import { store } from '@/store';
 import { defineStore } from 'pinia';
 import getData from '@/api/index';
-import { setCookie, setLocalStorage } from '@/utils/cache';
+import {
+  setCookie,
+  setLocalStorage,
+  removeCookie,
+  removeLocalStorage,
+} from '@/utils/cache';
 import { ElMessage } from 'element-plus';
 
 export const useUserStore = defineStore({
@@ -26,28 +31,47 @@ export const useUserStore = defineStore({
       const userInfo = userData.rs;
       this.setUserInfo(userInfo);
     },
+    async getUserInfoAction() {
+      const user = await this.getUserInfo();
+      return user;
+    },
     setUserInfo(userInfo) {
       this.userInfo = userInfo;
       setLocalStorage('userInfo', JSON.stringify(userInfo));
     },
-    login(params) {
-      return new Promise((resolve) => {
-        getData('loginByPhone', params).then((res) => {
-          if (!res.rs) {
-            resolve(res);
-            return;
-          }
-          const loginData = res;
-          const {
-            access_token: accessToken,
-            refresh_token: refreshToken,
-            validitySecond,
-          } = loginData?.rs;
-          this.setToken({ accessToken, refreshToken, validitySecond });
-          this.getUserInfo();
-          resolve(res);
-        });
-      });
+    removeAuthCache() {
+      removeCookie('iyuanwu_token');
+      removeCookie('iyuanwu_refreshToken');
+      removeCookie('iyuanwu_expiration');
+      removeLocalStorage('userInfo');
+    },
+    async login(params) {
+      try {
+        const res = await getData('loginByPhone', params);
+        if (!res.rs) {
+          return res;
+        }
+        const loginData = res;
+        const {
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          validitySecond,
+        } = loginData?.rs;
+        this.setToken({ accessToken, refreshToken, validitySecond });
+        this.getUserInfoAction();
+        return res;
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    },
+    async logout() {
+      const res = await this.doLogout();
+      this.removeAuthCache();
+      return res;
+    },
+    async doLogout() {
+      const res = await getData('DiscardToken', '', 'get');
+      return res;
     },
   },
 });

@@ -9,13 +9,29 @@
     </template>
     <ul class="entrance-list">
       <li class="entrance-item">新品库</li>
-      <li class="entrance-item">退出登录</li>
+      <li class="entrance-item" @click="logout">退出登录</li>
     </ul>
   </el-popover>
 </template>
 
 <script>
-export default {};
+import { useUserStore } from '@/store/user';
+
+export default {
+  setup() {
+    const userStore = useUserStore();
+    function logout() {
+      userStore.logout().then((res) => {
+        if (res.code === 1) {
+          window.location.reload();
+        }
+      });
+    }
+    return {
+      logout,
+    };
+  },
+};
 </script>
 
 <style lang="less">

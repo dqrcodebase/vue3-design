@@ -40,12 +40,14 @@ export default {
     const { getData } = getCurrentInstance().appContext.config.globalProperties;
     function getTemplateList() {
       getListloading.value = true;
-      getData('GetTemplateList', getMoreDataParems.value).then((res) => {
-        getListloading.value = false;
-        noMore.value = res.data.length < getMoreDataParems.value.pageSize;
-        totalCount.value = res.totalCount;
-        list.value.push(...res.data);
-      });
+      getData('GetTemplateList', getMoreDataParems.value, { extra: true }).then(
+        (res) => {
+          getListloading.value = false;
+          noMore.value = res.data.length < getMoreDataParems.value.pageSize;
+          totalCount.value = res.totalCount;
+          list.value.push(...res.data);
+        },
+      );
     }
     onMounted(() => {
       getTemplateList();

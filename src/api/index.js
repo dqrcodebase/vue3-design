@@ -2,9 +2,15 @@ import request from '@/utils/request';
 import { getCookie } from '@/utils/cache';
 import { tuapi, tuOd, worksapi } from './config/index';
 
-export default function (method, data, requestType = 'post') {
+export default function (
+  method,
+  data,
+  { requestType = 'post', extra = false } = {
+    requestType: 'post',
+    extra: false,
+  },
+) {
   const accessToken = getCookie('iyuanwu_token');
-
   const config = {
     data,
     method: requestType,
@@ -21,6 +27,8 @@ export default function (method, data, requestType = 'post') {
   }
   if (worksapi[method]) {
     config.url = `${process.env.VUE_APP_WORKSAPI}${worksapi[method]}`;
+  }
+  if (extra) {
     config.data = {
       sign: '6DCB46263F2B2F59ED6FB2A084C4D633',
       sysName: 'IYWTU',

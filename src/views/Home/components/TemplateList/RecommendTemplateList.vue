@@ -8,7 +8,7 @@
             class="list-component"
             :isShowFooter="false"
             :list="groupItemList(item, index)"
-            @changeCollectState="changeCollectState">
+            @changeCollectState="(items) => changeCollectState(item, items)">
             <template v-slot:immobilization>
               <div class="space-between list-head">
                 <span class="left">{{ item.name }}</span>
@@ -76,12 +76,16 @@ export default {
 
     function getTemplateListNew() {
       getListloading.value = true;
-      getData('GetTemplateListNew', {
-        modeType: '0',
-        pageIndex: 1,
-        pageSize: 50,
-        templateType: 1,
-      }).then((res) => {
+      getData(
+        'GetTemplateListNew',
+        {
+          modeType: '0',
+          pageIndex: 1,
+          pageSize: 50,
+          templateType: 1,
+        },
+        { extra: true },
+      ).then((res) => {
         getListloading.value = false;
         groupRecommendTemplateList.value.push(...res.data);
       });
@@ -90,11 +94,13 @@ export default {
       getListloading.value = true;
       getMoreDataParems.value.kId = noGroupData.value.kId;
       getMoreDataParems.value.pageIndex += 1;
-      getData('GetTemplateList', getMoreDataParems.value).then((res) => {
-        getListloading.value = false;
-        noMore.value = res.data.length < getMoreDataParems.value.pageSize;
-        noGroupData.value.list.push(...res.data);
-      });
+      getData('GetTemplateList', getMoreDataParems.value, { extra: true }).then(
+        (res) => {
+          getListloading.value = false;
+          noMore.value = res.data.length < getMoreDataParems.value.pageSize;
+          noGroupData.value.list.push(...res.data);
+        },
+      );
     }
     function moreHandle(item) {
       isGroup.value = false;
@@ -117,8 +123,24 @@ export default {
         : item.items.filter((it, index) => index < 12);
       return value;
     }
-    function changeCollectState() {
-      asideStore.excludeComponent = asideStore.activeListComponent;
+    function changeCollectState(item, items) {
+      const params = { tId: items.tId };
+      getData('CollectTemplate', params, { extra: true }).then((res) => {
+        if (res.code === 1) {
+          groupRecommendTemplateList.value.forEach((element) => {
+            if (element.kId === item.kId) {
+              element.items.forEach((el) => {
+                if (el.tId === items.tId) {
+                  const ele = el;
+                  ele.isCollect = !items.isCollect;
+                }
+              });
+            }
+          });
+          console.log(groupRecommendTemplateList);
+        }
+        asideStore.excludeComponent = asideStore.activeListComponent;
+      });
     }
 
     onMounted(() => {

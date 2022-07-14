@@ -70,7 +70,7 @@ export const useUserStore = defineStore({
       return res;
     },
     async doLogout() {
-      const res = await getData('DiscardToken', '', 'get');
+      const res = await getData('DiscardToken', '', { requestType: 'get' });
       return res;
     },
   },

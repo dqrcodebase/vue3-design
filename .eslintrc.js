@@ -15,6 +15,6 @@ module.exports = {
     //  是否禁止使用特定的语法
     'no-restricted-syntax': 0,
     // 打开大括号之后和关闭大括号之前执行的换行规则
-    'object-curly-newline': ['error', { consistent: true }],
+    'object-curly-newline': ['error', { multiline: true }],
   },
 };

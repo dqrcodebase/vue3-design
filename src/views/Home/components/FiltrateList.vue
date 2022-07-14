@@ -1,6 +1,6 @@
 <template>
   <div class="flex filtrate">
-    <el-input v-model="input" placeholder="Please input" />
+    <el-input v-model="input" :placeholder="placeholder" />
     <div class="filtrate-button">
       <el-icon :size="24"><Menu /> </el-icon>
       <span class="filtrate-text">筛选</span>
@@ -10,6 +10,12 @@
 
 <script>
 export default {
+  props: {
+    placeholder: {
+      type: String,
+      default: '样版名称',
+    },
+  },
   setup() {},
 };
 </script>

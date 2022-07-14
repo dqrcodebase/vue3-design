@@ -1,6 +1,8 @@
 import Axios from 'axios';
 
-const server = Axios.create({ timeout: 60000 });
+const server = Axios.create({
+  timeout: 60000,
+});
 
 server.interceptors.request.use(
   (config) => {

@@ -2,7 +2,20 @@
   <div class="design-wrap-aside">
     <type-select-list />
     <div class="aside-list" :class="{ 'is-hide': asideIsMini }">
-      <component :is="listComponent" />
+      <div class="template-components">
+        <div class="design-gallery-top">
+          <filtrate-list class="filtrate-list" />
+          <list-tab-panel
+            :tabsPanel="tabsPanel"
+            :activePanel="activeListComponent"
+            @changeTabPanel="changeTabPanel" />
+        </div>
+        <div class="design-gallery-list">
+          <keep-alive :exclude="excludeComponent">
+            <component :is="activeListComponent" />
+          </keep-alive>
+        </div>
+      </div>
       <div class="control-aside-size" @click="changeAsideSize">
         <el-icon :size="20" color="#657097"><CaretRight /></el-icon
       ></div>
@@ -11,24 +24,55 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useAsideStore } from '@/store/aside';
-import TemplateList from './TemplateList.vue';
+import { useUserStore } from '@/store/user';
+import { getCookie } from '@/utils/cache';
+import RecommendTemplateList from './TemplateList/RecommendTemplateList.vue';
+import CollectTemplateList from './TemplateList/CollectTemplateList.vue';
+import OneselfTemplateList from './TemplateList/OneselfTemplateList.vue';
 import TypeSelectList from './TypeSelectList.vue';
+import ListTabPanel from './ListTabPanel.vue';
+import FiltrateList from './FiltrateList.vue';
 
 export default {
-  components: { TemplateList, TypeSelectList },
+  components: {
+    RecommendTemplateList,
+    CollectTemplateList,
+    TypeSelectList,
+    FiltrateList,
+    ListTabPanel,
+    OneselfTemplateList,
+  },
   setup() {
-    const listComponent = ref('TemplateList');
     const asideStore = useAsideStore();
+    const userStore = useUserStore();
+    const tabsPanel = ref([]);
+    const asideActiveType = computed(() => asideStore.asideActiveType);
+    const excludeComponent = computed(() => asideStore.excludeComponent);
+    watch(asideActiveType, (newVal) => {
+      tabsPanel.value = newVal.listComponentData?.tabPanel;
+    });
+
     function changeAsideSize() {
       asideStore.asideIsMini = !asideStore.asideIsMini;
     }
+    function changeTabPanel(acitveTab) {
+      if (getCookie('iyuanwu_token')) {
+        asideStore.activeListComponent = acitveTab.id;
+      } else {
+        userStore.loginDialogState = true;
+      }
+    }
     return {
-      listComponent,
       asideIsMini: computed(() => asideStore.asideIsMini),
+      asideActiveType: computed(() => asideStore.asideActiveType),
+      activeListComponent: computed(() => asideStore.activeListComponent),
+      tabsPanel,
       changeAsideSize,
+      changeTabPanel,
       asideStore,
+      excludeComponent,
     };
   },
 };
@@ -65,5 +109,37 @@ export default {
     border-radius: 10px;
     padding: 0px 7px;
   }
+}
+.template-components {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  .filtrate-list {
+    margin-right: 28px;
+  }
+}
+.design-gallery-list {
+  margin-top: 12px;
+  height: 100%;
+  overflow: hidden;
+}
+/deep/.list-head {
+  margin-top: 12px;
+  padding-bottom: 20px;
+
+  .right {
+    font-size: 14px;
+    color: #667198;
+    cursor: pointer;
+  }
+}
+/deep/.list-component-wrap {
+  overflow: hidden;
+  flex: 1;
+  padding-right: 28px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 </style>

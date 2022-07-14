@@ -5,6 +5,10 @@ export const useAsideStore = defineStore({
   id: 'app-aside',
   state: () => ({
     asideIsMini: true,
+    asideActiveType: {},
+    asideActiveIndex: 0,
+    excludeComponent: '',
+    activeListComponent: 'RecommendTemplateList',
   }),
 });
 

@@ -1,6 +1,7 @@
 <template>
+  <slot class="pd-b"></slot>
   <el-scrollbar class="list-scrollbar">
-    <slot></slot>
+    <slot class="pd-b" name="immobilization"></slot>
     <div
       v-infinite-scroll="load"
       :infinite-scroll-disabled="noMore"
@@ -8,12 +9,20 @@
       :infinite-scroll-distance="200">
       <ul class="list">
         <li class="item" v-for="item in list" :key="item.tId">
+          <div
+            v-if="isShowCollect"
+            class="collect"
+            @click="changeCollectState(item)">
+            <el-icon v-show="!item.isCollect"><Star /></el-icon>
+            <el-icon v-show="item.isCollect"><StarFilled /></el-icon>
+          </div>
           <img class="cover" v-lazy="item.cover" :alt="item.name" />
         </li>
       </ul>
       <div class="list-footer" v-if="isShowFooter">
-        {{ !loading }}
-        <p v-show="!noMore">加载中... </p>
+        <p v-show="!noMore"
+          >加载中...<el-icon><Loading /></el-icon>
+        </p>
         <p v-show="noMore">没有更多了 </p>
       </div>
     </div>
@@ -41,14 +50,22 @@ export default {
       type: Boolean,
       default: false,
     },
+    isShowCollect: {
+      type: Boolean,
+      default: true,
+    },
   },
-  emits: ['load'],
-  setup() {
+  emits: ['load', 'changeCollectState'],
+  setup(props, context) {
     function load() {
       this.$emit('load');
     }
+    function changeCollectState(item) {
+      context.emit('changeCollectState', item);
+    }
     return {
       load,
+      changeCollectState,
     };
   },
 };
@@ -60,10 +77,17 @@ export default {
   justify-content: space-between;
   grid-template-columns: repeat(auto-fill, 120px);
   grid-gap: 0 12px;
-  padding-top: 20px;
 }
 .list-footer {
   text-align: center;
+  font-size: 14px;
+  p {
+    text-align: center;
+    color: #666e88;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: -17px;
+  }
 }
 .item {
   width: 120px;
@@ -73,12 +97,19 @@ export default {
   margin-bottom: 12px;
   border: 1px solid #eee;
   box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
   img {
     border-radius: 3px;
+  }
+  .collect {
+    position: absolute;
+    cursor: pointer;
   }
 }
 .el-scrollbar {
   overflow: initial;
+  height: calc(100% - 54px);
 }
 .el-scrollbar {
   &.list-scrollbar {
@@ -86,5 +117,8 @@ export default {
       right: -20px;
     }
   }
+}
+.pd-b {
+  padding-bottom: 20px;
 }
 </style>

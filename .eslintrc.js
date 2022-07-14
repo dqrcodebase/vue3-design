@@ -12,5 +12,6 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     // 'global-require': 0, // 要求 require() 出现在顶层模块作用域中
     'no-restricted-syntax': 0, //  是否禁止使用特定的语法
+    'object-curly-newline': ['error', { multiline: true }], // 打开大括号之后和关闭大括号之前执行的换行规则
   },
 };

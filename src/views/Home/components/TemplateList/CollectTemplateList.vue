@@ -1,14 +1,15 @@
 <template>
-  <aside-list-skeleton v-if="getListloading && list.length === 0" />
+  <aside-list-skeleton v-if="getListloading && collectList.length === 0" />
   <div class="list-component-wrap">
     <list-component
       class="list-component"
-      :list="list"
+      :list="collectList"
       :loading="getListloading"
       :noMore="noMore"
+      @changeCollectState="changeCollectState"
       @load="getMoreData">
       <div class="space-between list-head">
-        <span class="left">收藏({{ totalCount }})</span>
+        <span class="left">收藏({{ collectTotalCount }})</span>
         <span class="right">管理</span>
       </div></list-component
     >
@@ -18,7 +19,13 @@
 <script>
 import ListComponent from '@/components/list.vue';
 import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
-import { ref, onMounted, getCurrentInstance } from 'vue';
+import { ref, onMounted } from 'vue';
+import {
+  getListOption,
+  getTemplateList,
+  changeCollectState as changeState,
+  useKeepAlive,
+} from '@/hooks/getList';
 
 export default {
   name: 'CollectTemplateList',
@@ -27,42 +34,36 @@ export default {
     AsideListSkeleton,
   },
   setup() {
-    const getListloading = ref(true);
-    const noMore = ref(false);
-    const list = ref([]);
-    const totalCount = ref(0);
-    const getMoreDataParems = ref({
-      modeType: '0',
-      pageIndex: 1,
-      pageSize: 50,
-      templateType: 2,
-    });
-    const { getData } = getCurrentInstance().appContext.config.globalProperties;
-    function getTemplateList() {
-      getListloading.value = true;
-      getData('GetTemplateList', getMoreDataParems.value, { extra: true }).then(
-        (res) => {
-          getListloading.value = false;
-          noMore.value = res.data.length < getMoreDataParems.value.pageSize;
-          totalCount.value = res.totalCount;
-          list.value.push(...res.data);
-        },
-      );
+    const collectList = ref([]);
+    const collectTotalCount = ref(0);
+    const { getListloading, noMore, getListParems } = getListOption();
+    getListParems.value.templateType = 2;
+    async function getList() {
+      const { list, totalCount } = await getTemplateList('GetTemplateList');
+      collectTotalCount.value = totalCount;
+      collectList.value.push(...list);
+    }
+    function getMoreData() {
+      getListParems.value.pageIndex += 1;
+      getList();
+    }
+    async function changeCollectState(items) {
+      const item = await changeState(items);
+      collectTotalCount.value = item.isCollect
+        ? collectTotalCount.value + 1
+        : collectTotalCount.value - 1;
     }
     onMounted(() => {
-      getTemplateList();
+      useKeepAlive();
+      getList();
     });
-    function getMoreData() {
-      getMoreDataParems.value.pageIndex += 1;
-      getTemplateList();
-    }
-
     return {
       getListloading,
       noMore,
-      list,
-      totalCount,
+      collectList,
+      collectTotalCount,
       getMoreData,
+      changeCollectState,
     };
   },
 };

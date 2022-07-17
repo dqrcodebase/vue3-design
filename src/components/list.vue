@@ -58,7 +58,8 @@ export default {
   emits: ['load', 'changeCollectState'],
   setup(props, context) {
     function load() {
-      this.$emit('load');
+      console.log('load', this);
+      context.emit('load');
     }
     function changeCollectState(item) {
       context.emit('changeCollectState', item);
@@ -113,7 +114,7 @@ export default {
 }
 .el-scrollbar {
   &.list-scrollbar {
-    /deep/.el-scrollbar__bar {
+    :deep(.el-scrollbar__bar) {
       right: -20px;
     }
   }

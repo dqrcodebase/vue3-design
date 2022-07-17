@@ -1,6 +1,10 @@
 <template>
   <div class="flex filtrate">
-    <el-input v-model="input" :placeholder="placeholder" />
+    <el-input
+      v-model="input"
+      @blur.stop="query"
+      @keyup.enter="query"
+      :placeholder="placeholder" />
     <div class="filtrate-button">
       <el-icon :size="24"><Menu /> </el-icon>
       <span class="filtrate-text">筛选</span>
@@ -9,6 +13,8 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
   props: {
     placeholder: {
@@ -16,13 +22,23 @@ export default {
       default: '样版名称',
     },
   },
-  setup() {},
+  emits: ['query'],
+  setup(props, context) {
+    const input = ref('');
+    function query() {
+      context.emit('query', input);
+    }
+    return {
+      input,
+      query,
+    };
+  },
 };
 </script>
 
 <style scoped lang="less">
 .filtrate {
-  /deep/.el-input {
+  :deep(.el-input) {
     flex: 1;
     line-height: 40px;
     height: 40px;

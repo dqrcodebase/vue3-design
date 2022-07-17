@@ -7,7 +7,7 @@ export const useAsideStore = defineStore({
     asideIsMini: true,
     asideActiveType: {},
     asideActiveIndex: 0,
-    excludeComponent: '',
+    excludeComponent: ['RecommendTemplateList'],
     activeListComponent: 'RecommendTemplateList',
   }),
 });

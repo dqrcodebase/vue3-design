@@ -7,8 +7,10 @@
           <list-component
             class="list-component"
             :isShowFooter="false"
-            :list="groupItemList(item, index)"
-            @changeCollectState="(items) => changeCollectState(item, items)">
+            :list="groupItemList(item)"
+            @changeCollectState="
+              (items) => changeGroupCollectState(items, item)
+            ">
             <template v-slot:immobilization>
               <div class="space-between list-head">
                 <span class="left">{{ item.name }}</span>
@@ -46,6 +48,11 @@ import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useAsideStore } from '@/store/aside';
 import ListComponent from '@/components/list.vue';
 import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
+import {
+  getListOption,
+  getTemplateList,
+  changeCollectState,
+} from '@/hooks/getList';
 
 export default {
   name: 'RecommendTemplateList',
@@ -55,22 +62,16 @@ export default {
   },
   setup() {
     const asideStore = useAsideStore();
-    const activeName = ref('recommend');
     const isGroup = ref(true);
     const groupRecommendTemplateList = ref([]);
     const noGroupData = ref({
       name: '',
       list: [],
     });
-    const getListloading = ref(true);
-    const noMore = ref(false);
-    const getMoreDataParems = ref({
-      kId: 0,
-      modeType: '0',
-      pageIndex: 1,
-      pageSize: 50,
-      templateType: 1,
-    });
+
+    const { getListloading, noMore, getListParems } = getListOption();
+    console.log(getListParems.value);
+    getListParems.value.templateType = 1;
     const asideIsMini = computed(() => asideStore.asideIsMini);
     const { getData } = getCurrentInstance().appContext.config.globalProperties;
 
@@ -90,32 +91,24 @@ export default {
         groupRecommendTemplateList.value.push(...res.data);
       });
     }
-    function getTemplateList() {
-      getListloading.value = true;
-      getMoreDataParems.value.kId = noGroupData.value.kId;
-      getMoreDataParems.value.pageIndex += 1;
-      getData('GetTemplateList', getMoreDataParems.value, { extra: true }).then(
-        (res) => {
-          getListloading.value = false;
-          noMore.value = res.data.length < getMoreDataParems.value.pageSize;
-          noGroupData.value.list.push(...res.data);
-        },
-      );
-    }
     function moreHandle(item) {
       isGroup.value = false;
       noGroupData.value.name = item.name;
       noGroupData.value.list = [...item.items];
       noGroupData.value.kId = item.kId;
+      getListParems.value.kId = noGroupData.value.kId;
     }
     function backGroup() {
       isGroup.value = true;
-      getMoreDataParems.value.pageIndex = 1;
+      getListParems.value.pageIndex = 1;
       noGroupData.value.list = [];
       noMore.value = false;
     }
-    function getMoreData() {
-      getTemplateList();
+    async function getMoreData() {
+      getListParems.value.kId = noGroupData.value.kId;
+      getListParems.value.pageIndex += 1;
+      const { list } = await getTemplateList('GetTemplateList');
+      noGroupData.value.list.push(...list);
     }
     function groupItemList(item) {
       const value = asideIsMini.value
@@ -123,7 +116,7 @@ export default {
         : item.items.filter((it, index) => index < 12);
       return value;
     }
-    function changeCollectState(item, items) {
+    function changeGroupCollectState(items, item) {
       const params = { tId: items.tId };
       getData('CollectTemplate', params, { extra: true }).then((res) => {
         if (res.code === 1) {
@@ -137,7 +130,6 @@ export default {
               });
             }
           });
-          console.log(groupRecommendTemplateList);
         }
         asideStore.excludeComponent = asideStore.activeListComponent;
       });
@@ -147,7 +139,6 @@ export default {
       getTemplateListNew();
     });
     return {
-      activeName,
       groupRecommendTemplateList,
       asideIsMini,
       isGroup,
@@ -158,6 +149,7 @@ export default {
       backGroup,
       getMoreData,
       changeCollectState,
+      changeGroupCollectState,
       getListloading,
     };
   },
@@ -193,7 +185,7 @@ export default {
     color: #222;
   }
 }
-/deep/.el-scrollbar__bar {
+:v-deep .el-scrollbar__bar {
   right: 8px;
 }
 </style>

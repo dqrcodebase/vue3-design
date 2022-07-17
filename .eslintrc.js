@@ -16,5 +16,11 @@ module.exports = {
     'no-restricted-syntax': 0,
     // 打开大括号之后和关闭大括号之前执行的换行规则
     'object-curly-newline': ['error', { consistent: true }],
+    // 强制操作符使用一致的换行符风格
+    'operator-linebreak': [
+      'error',
+      'after',
+      { overrides: { '?': 'before', ':': 'before' } },
+    ],
   },
 };

@@ -1,16 +1,15 @@
 <template>
-  <aside-list-skeleton v-if="getListloading && oneselfList.length === 0" />
+  <aside-list-skeleton v-if="getListloading && filtrateList.length === 0" />
   <div class="list-component-wrap">
     <list-component
       class="list-component"
-      :list="oneselfList"
+      :list="filtrateList"
       :loading="getListloading"
       :noMore="noMore"
       :isShowCollect="false"
       @load="getMoreData">
       <div class="space-between list-head">
-        <span class="left">定制({{ collectTotalCount }})</span>
-        <span class="right">管理</span>
+        <span class="left">搜索结果({{ collectTotalCount }})</span>
       </div></list-component
     >
   </div>
@@ -19,7 +18,7 @@
 <script>
 import ListComponent from '@/components/list.vue';
 import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
-import { ref, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import { getListOption, getTemplateList } from '@/hooks/getList';
 
 export default {
@@ -28,30 +27,54 @@ export default {
     ListComponent,
     AsideListSkeleton,
   },
-  setup() {
-    const oneselfList = ref([]);
+  props: {
+    input: {
+      type: String,
+      default: '',
+    },
+  },
+  setup(props) {
+    const filtrateList = ref([]);
     const collectTotalCount = ref(0);
     const { getListloading, noMore, getListParems } = getListOption();
-    getListParems.value.templateType = 3;
+
     async function getList() {
       const { list, totalCount } = await getTemplateList('GetTemplateList');
       collectTotalCount.value = totalCount;
-      oneselfList.value.push(...list);
+      filtrateList.value.push(...list);
     }
 
     function getMoreData() {
       getListParems.value.pageIndex += 1;
       getList();
     }
-    onMounted(() => {
-      getList();
-    });
+    async function queryListHandle() {
+      getListParems.value.templateType = 1;
+      getListParems.value.keyword1 = props.input;
+      console.log(getListParems);
+      //   const { list } = await getTemplateList('GetTemplateList');
+      //   filtrateList.value.push(...list);
+    }
+
+    watch(
+      () => props.input,
+      (newVal, oldVal) => {
+        if (newVal === oldVal) {
+          return;
+        }
+        getListParems.value.pageIndex = 1;
+        filtrateList.value = [];
+        queryListHandle();
+      },
+      { immediate: true },
+    );
     return {
       getListloading,
       noMore,
-      oneselfList,
+      filtrateList,
       collectTotalCount,
       getMoreData,
+      queryListHandle,
     };
   },
 };

@@ -4,16 +4,20 @@
     <div class="aside-list" :class="{ 'is-hide': asideIsMini }">
       <div class="template-components">
         <div class="design-gallery-top">
-          <filtrate-list class="filtrate-list" />
+          <filtrate-list class="filtrate-list" @query="queryListHandle" />
           <list-tab-panel
+            v-if="!filtreInput"
             :tabsPanel="tabsPanel"
             :activePanel="activeListComponent"
             @changeTabPanel="changeTabPanel" />
         </div>
         <div class="design-gallery-list">
-          <keep-alive :exclude="excludeComponent">
-            <component :is="activeListComponent" />
-          </keep-alive>
+          <template v-if="!filtreInput">
+            <keep-alive :exclude="excludeComponent">
+              <component :is="activeListComponent" />
+            </keep-alive>
+          </template>
+          <component v-else :is="filtrateListComponent" :input="filtreInput" />
         </div>
       </div>
       <div class="control-aside-size" @click="changeAsideSize">
@@ -28,6 +32,7 @@ import { ref, computed, watch } from 'vue';
 import { useAsideStore } from '@/store/aside';
 import { useUserStore } from '@/store/user';
 import { getCookie } from '@/utils/cache';
+import FiltrateTemplateList from './TemplateList/FiltrateTemplateList.vue';
 import RecommendTemplateList from './TemplateList/RecommendTemplateList.vue';
 import CollectTemplateList from './TemplateList/CollectTemplateList.vue';
 import OneselfTemplateList from './TemplateList/OneselfTemplateList.vue';
@@ -43,6 +48,7 @@ export default {
     FiltrateList,
     ListTabPanel,
     OneselfTemplateList,
+    FiltrateTemplateList,
   },
   setup() {
     const asideStore = useAsideStore();
@@ -50,6 +56,14 @@ export default {
     const tabsPanel = ref([]);
     const asideActiveType = computed(() => asideStore.asideActiveType);
     const excludeComponent = computed(() => asideStore.excludeComponent);
+    const filtreInput = ref('');
+    const filtrateListComponent = ref('');
+    const componentData = {
+      template: {
+        name: 'FiltrateTemplateList',
+      },
+    };
+
     watch(asideActiveType, (newVal) => {
       tabsPanel.value = newVal.listComponentData?.tabPanel;
     });
@@ -64,13 +78,22 @@ export default {
         userStore.loginDialogState = true;
       }
     }
+    function queryListHandle(input) {
+      filtreInput.value = input.value;
+      filtrateListComponent.value =
+        componentData[asideActiveType.value.id].name;
+    }
+
     return {
       asideIsMini: computed(() => asideStore.asideIsMini),
       asideActiveType: computed(() => asideStore.asideActiveType),
       activeListComponent: computed(() => asideStore.activeListComponent),
       tabsPanel,
+      filtreInput,
+      filtrateListComponent,
       changeAsideSize,
       changeTabPanel,
+      queryListHandle,
       asideStore,
       excludeComponent,
     };
@@ -124,7 +147,7 @@ export default {
   height: 100%;
   overflow: hidden;
 }
-/deep/.list-head {
+:deep(.list-head) {
   margin-top: 12px;
   padding-bottom: 20px;
 
@@ -134,7 +157,7 @@ export default {
     cursor: pointer;
   }
 }
-/deep/.list-component-wrap {
+:deep(.list-component-wrap) {
   overflow: hidden;
   flex: 1;
   padding-right: 28px;

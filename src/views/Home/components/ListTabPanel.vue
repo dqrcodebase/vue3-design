@@ -11,30 +11,24 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    tabsPanel: {
-      type: Array,
-      default() {
-        return [];
-      },
-    },
-    activePanel: {
-      type: String,
-      default: '',
+<script setup>
+defineProps({
+  tabsPanel: {
+    type: Array,
+    default() {
+      return [];
     },
   },
-  emits: ['changeTabPanel'],
-  setup(props, context) {
-    function changeTabPanel(item) {
-      context.emit('changeTabPanel', item);
-    }
-    return {
-      changeTabPanel,
-    };
+  activePanel: {
+    type: String,
+    default: '',
   },
-};
+});
+const emit = defineEmits(['changeTabPanel']);
+function changeTabPanel(item) {
+  console.log("🚀 ~ file: ListTabPanel.vue:29 ~ changeTabPanel ~ item:", item)
+  emit('changeTabPanel', item);
+}
 </script>
 
 <style scoped lang="less">
@@ -46,11 +40,13 @@ export default {
   display: flex;
   margin: 24px 28px 0 0;
   cursor: pointer;
+
   .cursor-pointer {
     flex: 1;
     text-align: center;
     line-height: 40px;
     font-size: 14px;
+
     &.active {
       color: var(--main-color);
       background-color: #ffffff;

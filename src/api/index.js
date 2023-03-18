@@ -30,7 +30,7 @@ export default function (
   }
   if (extra) {
     config.data = {
-      sign: '6DCB46263F2B2F59ED6FB2A084C4D633',
+      sign: 'EBE384120060E00B6B611167D4FB9923',
       sysName: 'IYWTU',
       ts: 1657076265000,
       version: '1.0.0',

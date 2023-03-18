@@ -24,7 +24,7 @@
     "element-plus": "^2.2.6",
     "js-cookie": "^3.0.1",
     "pinia": "^2.0.14",
-    "vue": "^3.0.0",
+    "vue": "^3.2.13",
     "vue-lazyload": "^3.0.0-rc.2",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

@@ -2,13 +2,13 @@ import { ref } from 'vue';
 import getData from '@/api/index';
 import { useAsideStore } from '@/store/aside';
 
-console.log('111111');
 const asideStore = useAsideStore();
 export function getListOption() {
   const getListloading = ref(true);
   const noMore = ref(false);
   const getListParems = ref({
-    modeType: '0',
+    templateType: 1,
+    kId: 15,
     pageIndex: 1,
     pageSize: 50,
   });

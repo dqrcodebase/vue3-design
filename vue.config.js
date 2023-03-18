@@ -1,4 +1,5 @@
 module.exports = {
+  lintOnSave: false,
   devServer: {
     port: 3070,
     proxy: {
@@ -17,7 +18,7 @@ module.exports = {
         },
       },
       '/worksapi': {
-        target: 'http://47.102.46.179:13308',
+        target: 'https://dapi.chdesign.cn/',
         changeOrigin: true,
         pathRewrite: {
           '^/worksapi': '/',

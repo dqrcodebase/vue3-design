@@ -6,6 +6,7 @@
         :key="item.id"
         class="type-select-item"
         :class="{ active: index === asideActiveIndex }"
+        @click="selectTypeHandle(item, index)"
         >{{ item.selectType }}</li
       >
     </ul>
@@ -26,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script >
 import { useUserStore } from '@/store/user';
 import { useAsideStore } from '@/store/aside';
 import { computed } from 'vue';
@@ -46,6 +47,7 @@ export default {
             { id: 'CollectTemplateList', title: '收藏样版' },
             { id: 'OneselfTemplateList', title: '我的样版' },
           ],
+          dynamicComponent: 'RecommendTemplateList',
         },
       },
       {
@@ -54,6 +56,7 @@ export default {
         listComponentData: {
           placeholder: '图案名称',
           tabPanel: ['推荐图案', '收藏图案', '我的图案'],
+          dynamicComponent: 'FiltrateList',
         },
       },
       {
@@ -79,11 +82,19 @@ export default {
     function loginHandle() {
       userStore.loginDialogState = true;
     }
+    function selectTypeHandle(item,index) {
+      console.log("🚀 ~ file: TypeSelectList.vue:86 ~ selectTypeHandle ~ item:", item)
+      asideStore.asideActiveType = typeSelectList[asideStore.asideActiveIndex];
+      asideStore.asideActiveIndex = index;
+      asideStore.activeListComponent = item.listComponentData.dynamicComponent;
+      asideStore.asideActiveType = item
+    }
     return {
       userInfo: computed(() => userStore.userInfo),
       asideActiveIndex: computed(() => asideStore.asideActiveIndex),
       typeSelectList,
       loginHandle,
+      selectTypeHandle
     };
   },
 };

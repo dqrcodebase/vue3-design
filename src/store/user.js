@@ -25,7 +25,7 @@ export const useUserStore = defineStore({
     async getUserInfo() {
       const userData = await getData('GetUserInfo');
       if (userData.code !== 1) {
-        ElMessage.error(userData.msg);
+        ElMessage.error(userData.message);
         return;
       }
       const userInfo = userData.rs;
@@ -48,19 +48,20 @@ export const useUserStore = defineStore({
     async login(params) {
       try {
         const res = await getData('loginByPhone', params);
-        if (!res.rs) {
+        if (!res.data) {
           return res;
         }
         const loginData = res;
         const {
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          validitySecond,
-        } = loginData?.rs;
-        this.setToken({ accessToken, refreshToken, validitySecond });
+          accessToken,
+          refreshToken,
+          expiration,
+        } = loginData?.data.token;
+        this.setToken({ accessToken, refreshToken, expiration });
         this.getUserInfoAction();
         return res;
       } catch (error) {
+        
         return Promise.reject(error);
       }
     },

@@ -1,4 +1,6 @@
 <template>
+  <!-- 骨架屏组件 -->
+
   <el-skeleton class="aside-list-skeleton" :loading="loading" animated>
     <template #template>
       <el-skeleton-item v-for="item in 48" :key="item" />
@@ -6,8 +8,13 @@
   </el-skeleton>
 </template>
 
-<script>
-export default {};
+<script setup>
+defineProps({
+  skeletonItemNumm: {
+    type: Number,
+    default: 48,
+  },
+})
 </script>
 
 <style scoped lang="less">

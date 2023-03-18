@@ -3,8 +3,15 @@ module.exports = {
   devServer: {
     port: 3070,
     proxy: {
+      '/accountapi': {
+        target: 'https://account.iyw.cn/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/accountapi': '/',
+        },
+      },
       '/tuapi': {
-        target: 'http://47.102.46.179:8085',
+        target: 'https://tuapi.chdesign.cn/',
         changeOrigin: true,
         pathRewrite: {
           '^/tuapi': '/',

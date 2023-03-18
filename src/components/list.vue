@@ -19,57 +19,47 @@
           <img class="cover" v-lazy="item.cover" :alt="item.name" />
         </li>
       </ul>
-      <div class="list-footer" v-if="isShowFooter">
-        <p v-show="!noMore"
-          >加载中...<el-icon><Loading /></el-icon>
-        </p>
-        <p v-show="noMore">没有更多了 </p>
-      </div>
+      <ListFooter v-if="isShowFooter" :noMore="noMore" />
     </div>
   </el-scrollbar>
 </template>
 
-<script>
-export default {
-  props: {
-    list: {
-      type: Array,
-      default() {
-        return [];
-      },
-    },
-    loading: {
-      type: Boolean,
-      default: true,
-    },
-    isShowFooter: {
-      type: Boolean,
-      default: true,
-    },
-    noMore: {
-      type: Boolean,
-      default: false,
-    },
-    isShowCollect: {
-      type: Boolean,
-      default: true,
+<script setup>
+import ListFooter from './ListFooter.vue';
+
+defineProps({
+  list: {
+    type: Array,
+    default() {
+      return [];
     },
   },
-  emits: ['load', 'changeCollectState'],
-  setup(props, context) {
-    function load() {
-      console.log('load', this);
-      context.emit('load');
-    }
-    function changeCollectState(item) {
-      context.emit('changeCollectState', item);
-    }
-    return {
-      load,
-      changeCollectState,
-    };
+  loading: {
+    type: Boolean,
+    default: true,
   },
-};
+  isShowFooter: {
+    type: Boolean,
+    default: true,
+  },
+  noMore: {
+    type: Boolean,
+    default: false,
+  },
+  isShowCollect: {
+    type: Boolean,
+    default: true,
+  },
+});
+const emit = defineEmits(['load', 'changeCollectState']);
+
+function load() {
+  console.log('load', this);
+  emit('load');
+}
+function changeCollectState(item) {
+  emit('changeCollectState', item);
+}
 </script>
 
 <style scoped lang="less">
@@ -79,17 +69,7 @@ export default {
   grid-template-columns: repeat(auto-fill, 120px);
   grid-gap: 0 12px;
 }
-.list-footer {
-  text-align: center;
-  font-size: 14px;
-  p {
-    text-align: center;
-    color: #666e88;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: -17px;
-  }
-}
+
 .item {
   width: 120px;
   height: 120px;

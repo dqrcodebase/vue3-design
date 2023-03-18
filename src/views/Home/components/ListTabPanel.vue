@@ -1,4 +1,6 @@
 <template>
+  <!-- 列表切换组件 -->
+
   <div class="tab-panel">
     <span
       v-for="item in tabsPanel"

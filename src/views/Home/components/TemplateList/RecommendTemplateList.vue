@@ -1,4 +1,6 @@
 <template>
+  <!-- 推荐样板列表 -->
+
   <div v-if="isGroup" class="group-wrap">
     <aside-list-skeleton v-if="getListloading" />
     <el-scrollbar>
@@ -43,7 +45,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useAsideStore } from '@/store/aside';
 import ListComponent from '@/components/list.vue';
@@ -53,107 +55,89 @@ import {
   getTemplateList,
   changeCollectState,
 } from '@/hooks/getList';
+import { getCookie } from '@/utils/cache';
+import { useUserStore } from '@/store/user';
 
-export default {
-  name: 'RecommendTemplateList',
-  components: {
-    ListComponent,
-    AsideListSkeleton,
-  },
-  setup() {
-    const asideStore = useAsideStore();
-    const isGroup = ref(true);
-    const groupRecommendTemplateList = ref([]);
-    const noGroupData = ref({
-      name: '',
-      list: [],
-    });
+// 用户store
+const userStore = useUserStore();
+const asideStore = useAsideStore();
+const isGroup = ref(true);
+const groupRecommendTemplateList = ref([]);
+const noGroupData = ref({
+  name: '',
+  list: [],
+});
+const { getListloading, noMore, getListParems } = getListOption();
+getListParems.value.templateType = 1;
+const asideIsMini = computed(() => asideStore.asideIsMini);
+const { getData } = getCurrentInstance().appContext.config.globalProperties;
 
-    const { getListloading, noMore, getListParems } = getListOption();
-    console.log(getListParems.value);
-    getListParems.value.templateType = 1;
-    const asideIsMini = computed(() => asideStore.asideIsMini);
-    const { getData } = getCurrentInstance().appContext.config.globalProperties;
-
-    function getTemplateListNew() {
-      getListloading.value = true;
-      getData(
-        'GetTemplateListNew',
-        {
-          modeType: '0',
-          pageIndex: 1,
-          pageSize: 50,
-          templateType: 1,
-        },
-        { extra: true },
-      ).then((res) => {
-        getListloading.value = false;
-        groupRecommendTemplateList.value.push(...res.data);
-      });
-    }
-    function moreHandle(item) {
-      isGroup.value = false;
-      noGroupData.value.name = item.name;
-      noGroupData.value.list = [...item.items];
-      noGroupData.value.kId = item.kId;
-      getListParems.value.kId = noGroupData.value.kId;
-    }
-    function backGroup() {
-      isGroup.value = true;
-      getListParems.value.pageIndex = 1;
-      noGroupData.value.list = [];
-      noMore.value = false;
-    }
-    async function getMoreData() {
-      getListParems.value.kId = noGroupData.value.kId;
-      getListParems.value.pageIndex += 1;
-      const { list } = await getTemplateList('GetTemplateList');
-      noGroupData.value.list.push(...list);
-    }
-    function groupItemList(item) {
-      const value = asideIsMini.value
-        ? item.items.filter((it, index) => index < 4)
-        : item.items.filter((it, index) => index < 12);
-      return value;
-    }
-    function changeGroupCollectState(items, item) {
-      const params = { tId: items.tId };
-      getData('CollectTemplate', params, { extra: true }).then((res) => {
-        if (res.code === 1) {
-          groupRecommendTemplateList.value.forEach((element) => {
-            if (element.kId === item.kId) {
-              element.items.forEach((el) => {
-                if (el.tId === items.tId) {
-                  const ele = el;
-                  ele.isCollect = !items.isCollect;
-                }
-              });
+function getTemplateListNew() {
+  getListloading.value = true;
+  getData(
+    'GetTemplateListNew',
+    {
+      modeType: '0',
+      pageIndex: 1,
+      pageSize: 50,
+      templateType: 1,
+    },
+    { extra: true },
+  ).then((res) => {
+    getListloading.value = false;
+    groupRecommendTemplateList.value.push(...res.data);
+  });
+}
+function moreHandle(item) {
+  isGroup.value = false;
+  noGroupData.value.name = item.name;
+  noGroupData.value.list = [...item.items];
+  noGroupData.value.kId = item.kId;
+  getListParems.value.kId = noGroupData.value.kId;
+}
+function backGroup() {
+  isGroup.value = true;
+  getListParems.value.pageIndex = 1;
+  noGroupData.value.list = [];
+  noMore.value = false;
+}
+async function getMoreData() {
+  getListParems.value.kId = noGroupData.value.kId;
+  getListParems.value.pageIndex += 1;
+  const { list } = await getTemplateList('GetTemplateList');
+  noGroupData.value.list.push(...list);
+}
+function groupItemList(item) {
+  const value = asideIsMini.value
+    ? item.items.filter((it, index) => index < 4)
+    : item.items.filter((it, index) => index < 12);
+  return value;
+}
+function changeGroupCollectState(items, item) {
+  if (!getCookie('iyuanwu_token')) {
+    userStore.loginDialogState = true;
+  } 
+  const params = { tId: items.tId };
+  getData('CollectTemplate', params, { extra: true }).then((res) => {
+    if (res.code === 1) {
+      groupRecommendTemplateList.value.forEach((element) => {
+        if (element.kId === item.kId) {
+          element.items.forEach((el) => {
+            if (el.tId === items.tId) {
+              const ele = el;
+              ele.isCollect = !items.isCollect;
             }
           });
         }
-        asideStore.excludeComponent = asideStore.activeListComponent;
       });
     }
+    asideStore.excludeComponent = asideStore.activeListComponent;
+  });
+}
 
-    onMounted(() => {
-      getTemplateListNew();
-    });
-    return {
-      groupRecommendTemplateList,
-      asideIsMini,
-      isGroup,
-      noGroupData,
-      noMore,
-      groupItemList,
-      moreHandle,
-      backGroup,
-      getMoreData,
-      changeCollectState,
-      changeGroupCollectState,
-      getListloading,
-    };
-  },
-};
+onMounted(() => {
+  getTemplateListNew();
+});
 </script>
 
 <style scoped lang="less">

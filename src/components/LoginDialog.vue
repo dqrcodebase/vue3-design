@@ -1,4 +1,6 @@
 <template>
+  <!-- 登录弹窗 -->
+
   <el-dialog v-model="visible" :show-close="false" center>
     <template #header="{ titleId, titleClass }">
       <div class="my-header">
@@ -14,7 +16,7 @@
       v-loading="loading"
       class="demo-form-inline">
       <el-form-item label="账号">
-        <el-input v-model="formInline.phone" placeholder="请输入账号" />
+        <el-input v-model="formInline.username" placeholder="请输入账号" />
       </el-form-item>
       <el-form-item label="密码">
         <el-input
@@ -31,52 +33,42 @@
   </el-dialog>
 </template>
 
-<script>
-import { ref, reactive, getCurrentInstance } from 'vue';
+<script setup>
+import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
 import { useUserStore } from '@/store/user';
+import { ElMessage } from 'element-plus'
 
-export default {
-  setup() {
-    const userStore = useUserStore();
-    const { globalProperties } = getCurrentInstance().appContext.config;
-    const { $message } = globalProperties;
-    const visible = ref(true);
-    const formInline = reactive({
-      equipment: 'pc',
-      languageType: 1,
-      password: '',
-      phone: '',
+const userStore = useUserStore();
+const visible = ref(true);
+const formInline = reactive({
+  clientType: 1,
+  deviceType: 1,
+  platformType: 1,
+  password: '',
+  username: '',
+});
+const loading = ref(false);
+
+onMounted(() => {});
+
+function close() {
+  userStore.loginDialogState = false;
+}
+
+async function onSubmit() {
+  loading.value = true;
+  const res = await userStore.login(formInline);
+  loading.value = false;
+  if (res.code === 1) {
+    close();
+  } else {
+    ElMessage({
+      showClose: true,
+      message: res.message,
+      type: 'error',
     });
-    const loading = ref(false);
-
-    function close() {
-      userStore.loginDialogState = false;
-    }
-
-    async function onSubmit() {
-      loading.value = true;
-      const res = await userStore.login(formInline);
-      loading.value = false;
-      if (res.code === 1) {
-        close();
-      } else {
-        $message({
-          showClose: true,
-          message: res.msg,
-          type: 'error',
-        });
-      }
-    }
-
-    return {
-      visible,
-      formInline,
-      loading,
-      onSubmit,
-      close,
-    };
-  },
-};
+  }
+}
 </script>
 
 <style scoped>

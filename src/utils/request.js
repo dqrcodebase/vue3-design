@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { ElNotification } from 'element-plus'
 
 const server = Axios.create({
   timeout: 60000,
@@ -19,8 +20,6 @@ server.interceptors.request.use(
 
 server.interceptors.response.use(
   (response) => {
-    // 对响应数据做点什么
-    console.log('response', response);
     return response.data;
   },
   (error) => {

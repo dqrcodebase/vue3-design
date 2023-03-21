@@ -1,12 +1,12 @@
 import request from '@/utils/request';
 import { getCookie } from '@/utils/cache';
-import { tuapi, tuOd, worksapi, accountapi } from './config/index';
+import { tuapi, tuOd, worksapi, accountapi, gatewayapi } from './config/index';
 import { options } from 'less';
 
 export default function (
   method,
   data,
-  { requestType = 'post', extra = false } = options
+  { requestType = 'post', extra = false } = options,
 ) {
   const accessToken = getCookie('iyuanwu_token');
   const config = {
@@ -28,6 +28,9 @@ export default function (
   }
   if (accountapi[method]) {
     config.url = `${process.env.VUE_APP_ACCOUNTAPI}${accountapi[method]}`;
+  }
+  if (gatewayapi[method]) {
+    config.url = `${process.env.VUE_APP_GATEWAYAPI}${gatewayapi[method]}`;
   }
   if (extra) {
     config.data = {

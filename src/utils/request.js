@@ -1,6 +1,8 @@
 import Axios from 'axios';
-import { ElNotification } from 'element-plus'
+import { ElNotification } from 'element-plus';
+import { isNumber } from 'element-plus/es/utils';
 
+let notification = null;
 const server = Axios.create({
   timeout: 60000,
 });
@@ -20,7 +22,16 @@ server.interceptors.request.use(
 
 server.interceptors.response.use(
   (response) => {
-    return response.data;
+    const { data } = response;
+    if (isNumber(data.data) && data.code === 1) {
+      notification?.close();
+      notification = ElNotification({
+        title: '提示',
+        message: data.msg || '未知错误',
+        type: data.code === 1 ? 'success' : 'error',
+      });
+    }
+    return data;
   },
   (error) => {
     // 对响应错误做点什么

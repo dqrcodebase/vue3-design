@@ -46,6 +46,7 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  // 是否展示收藏按钮
   isShowCollect: {
     type: Boolean,
     default: true,

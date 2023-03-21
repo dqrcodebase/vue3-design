@@ -14,24 +14,14 @@
   </el-popover>
 </template>
 
-<script>
+<script setup>
 import { useUserStore } from '@/store/user';
 
-export default {
-  setup() {
-    const userStore = useUserStore();
-    function logout() {
-      userStore.logout().then((res) => {
-        if (res.code === 1) {
-          window.location.reload();
-        }
-      });
-    }
-    return {
-      logout,
-    };
-  },
-};
+const userStore = useUserStore();
+function logout() {
+  userStore.logout().then((res) => {
+  });
+}
 </script>
 
 <style lang="less">

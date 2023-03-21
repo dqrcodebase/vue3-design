@@ -31,6 +31,13 @@ module.exports = {
           '^/worksapi': '/',
         },
       },
+      '/gatewayapi': {
+        target: 'https://gateway.iyw.cn/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/gatewayapi': '/',
+        },
+      },
     },
   },
 };

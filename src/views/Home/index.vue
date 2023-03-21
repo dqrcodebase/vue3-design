@@ -25,13 +25,12 @@ export default {
   setup() {
     const userStore = useUserStore();
     const accessToken = getCookie('iyuanwu_token');
+    const refreshToken = getCookie('iyuanwu_refreshToken');
+    const expiration = getCookie('iyuanwu_expiration');
+
     if (accessToken) {
-      const userInfo = JSON.parse(getLocalStorage('userInfo'));
-      if (userInfo) {
-        userStore.setUserInfo(userInfo);
-      } else {
-        userStore.getUserInfo();
-      }
+      userStore.setStoreToken({ accessToken, refreshToken, expiration });
+      userStore.getUserInfo();
     }
     return {
       loginDialogState: computed(() => userStore.loginDialogState),

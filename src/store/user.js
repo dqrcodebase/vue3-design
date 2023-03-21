@@ -14,13 +14,21 @@ export const useUserStore = defineStore({
   state: () => ({
     userInfo: {},
     loginDialogState: false,
+    storeToken: {
+      accessToken: '',
+      refreshToken: '',
+      expiration: '',
+    },
   }),
   actions: {
-    setToken({ accessToken, refreshToken, validitySecond }) {
-      const expiresTime = validitySecond / 60 / 60 / 24; // validitySecond单位是秒转换为单位是天
+    setCacheToken({ accessToken, refreshToken, expiration }) {
+      const expiresTime = expiration / 60 / 60 / 24; // validitySecond单位是秒转换为单位是天
       setCookie('iyuanwu_token', accessToken, { expires: expiresTime });
       setCookie('iyuanwu_refreshToken', refreshToken, { expires: 15 });
-      setCookie('iyuanwu_expiration', validitySecond, { expires: expiresTime });
+      setCookie('iyuanwu_expiration', expiration, { expires: expiresTime });
+    },
+    setStoreToken({ accessToken, refreshToken, expiration }) {
+      this.storeToken = { accessToken, refreshToken, expiration };
     },
     async getUserInfo() {
       const userData = await getData('GetUserInfo');
@@ -44,6 +52,8 @@ export const useUserStore = defineStore({
       removeCookie('iyuanwu_refreshToken');
       removeCookie('iyuanwu_expiration');
       removeLocalStorage('userInfo');
+      this.setUserInfo({});
+      this.setStoreToken({ accessToken: '', refreshToken: '', expiration: '' });
     },
     async login(params) {
       try {
@@ -52,16 +62,12 @@ export const useUserStore = defineStore({
           return res;
         }
         const loginData = res;
-        const {
-          accessToken,
-          refreshToken,
-          expiration,
-        } = loginData?.data.token;
-        this.setToken({ accessToken, refreshToken, expiration });
+        const { accessToken, refreshToken, expiration } = loginData?.data.token;
+        this.setCacheToken({ accessToken, refreshToken, expiration });
+        this.setStoreToken({ accessToken, refreshToken, expiration });
         this.getUserInfoAction();
         return res;
       } catch (error) {
-        
         return Promise.reject(error);
       }
     },
@@ -71,7 +77,7 @@ export const useUserStore = defineStore({
       return res;
     },
     async doLogout() {
-      const res = await getData('DiscardToken', '', { requestType: 'get' });
+      const res = await getData('loginOut', '', { requestType: 'get' });
       return res;
     },
   },

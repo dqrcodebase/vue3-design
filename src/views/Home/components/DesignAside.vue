@@ -60,6 +60,7 @@ const { asideActiveType, excludeComponent, asideIsMini, activeListComponent } =
   storeToRefs(asideStore);
 // 用户store
 const userStore = useUserStore();
+const {storeToken} = storeToRefs(userStore);
 
 const tabsPanel = ref([]);
 // 输入框筛选条件
@@ -83,6 +84,11 @@ const componentList = {
 watch(asideActiveType, (newVal) => {
   tabsPanel.value = newVal.listComponentData?.tabPanel;
 });
+watch(storeToken, (newVal) => {
+  const activeListComponent = asideStore.activeListComponent
+  asideStore.activeListComponent = ''
+  asideStore.activeListComponent = activeListComponent
+})
 
 // 改变列表展示区域大小
 function changeAsideSize() {

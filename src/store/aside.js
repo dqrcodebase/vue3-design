@@ -11,7 +11,7 @@ export const useAsideStore = defineStore({
     // 当前列表展示的索引
     asideActiveIndex: 0,
     // 不进行缓存的组件
-    excludeComponent: ['RecommendTemplateList'],
+    excludeComponent: ['CollectTemplateList'],
     // 当前激活的组件
     activeListComponent: 'RecommendTemplateList',
   }),

@@ -7,7 +7,8 @@
       :infinite-scroll-disabled="noMore"
       :infinite-scroll-immediate="false"
       :infinite-scroll-distance="200">
-      <ul class="list">
+      <template v-if="list.length > 0">
+      <ul class="list" >
         <li class="item" v-for="item in list" :key="item.tId">
           <div
             v-if="isShowCollect"
@@ -20,12 +21,17 @@
         </li>
       </ul>
       <ListFooter v-if="isShowFooter" :noMore="noMore" />
+    </template>
+    <div v-else class="show-empty">
+      <no-data />
+    </div>
     </div>
   </el-scrollbar>
 </template>
 
 <script setup>
 import ListFooter from './ListFooter.vue';
+import NoData from './NoData/index.vue';
 
 defineProps({
   list: {
@@ -102,5 +108,8 @@ function changeCollectState(item) {
 }
 .pd-b {
   padding-bottom: 20px;
+}
+.show-empty {
+  margin-top: 120px;
 }
 </style>

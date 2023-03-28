@@ -28,7 +28,7 @@ defineProps({
 });
 const emit = defineEmits(['changeTabPanel']);
 function changeTabPanel(item) {
-  console.log("🚀 ~ file: ListTabPanel.vue:29 ~ changeTabPanel ~ item:", item)
+  console.log('🚀 ~ file: ListTabPanel.vue:29 ~ changeTabPanel ~ item:', item);
   emit('changeTabPanel', item);
 }
 </script>

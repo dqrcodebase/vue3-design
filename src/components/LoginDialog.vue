@@ -34,9 +34,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useUserStore } from '@/store/user';
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
 
 const userStore = useUserStore();
 const visible = ref(true);

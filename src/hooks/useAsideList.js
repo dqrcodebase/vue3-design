@@ -3,12 +3,10 @@ import getData from '@/api/index';
 import { useAsideStore } from '@/store/aside';
 
 const asideStore = useAsideStore();
-export function getListOption() {
+export function useListOption() {
   const getListloading = ref(true);
   const noMore = ref(false);
   const getListParems = ref({
-    templateType: 1,
-    kId: 15,
     pageIndex: 1,
     pageSize: 50,
   });
@@ -18,25 +16,8 @@ export function getListOption() {
     noMore,
   };
 }
-export async function getTemplateList(method) {
-  const { getListloading, noMore, getListParems } = getListOption();
-  let totalCount = 0;
-  let list = [];
-  getListloading.value = true;
-  await getData(method, getListParems.value, { extra: true }).then((res) => {
-    try {
-      const { pageSize } = getListParems.value;
-      getListloading.value = false;
-      totalCount = res.totalCount;
-      list = res.data;
-      noMore.value = pageSize > list.length;
-    } catch (error) {
-      console.log(error);
-    }
-  });
-  return { list, totalCount };
-}
-export async function changeCollectState(item) {
+
+export async function useCollectState(item) {
   const it = item;
   const params = { tId: item.tId };
   await getData('CollectTemplate', params, { extra: true }).then((res) => {
@@ -49,6 +30,7 @@ export async function changeCollectState(item) {
   return it;
 }
 
+// 将组件缓存
 export function useKeepAlive() {
   const index = asideStore.excludeComponent.indexOf(
     asideStore.activeListComponent,

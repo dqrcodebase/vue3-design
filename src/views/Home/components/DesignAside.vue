@@ -24,7 +24,7 @@
             <!-- 由于组件是通过变量引用而不是基于字符串组件名注册的，
               在 <script setup> 中要使用动态组件的时候，应该使用动态的 :is 来绑定 -->
             <keep-alive :exclude="excludeComponent">
-              <component :is="componentList[activeListComponent]" />
+              <component :ref="(el) => {setRef(el,activeListComponent)}" :is="componentList[activeListComponent]" />
             </keep-alive>
           </template>
           <component v-else :is="componentList[filtrateListComponent]" :input="filtreInput" />
@@ -32,7 +32,7 @@
       </div>
 
       <!-- 列表展示区域尺寸控制 -->
-      <div class="control-aside-size" @click="changeAsideSize">
+      <div class="control-aside-size" ref="asideSize" @click="changeAsideSize">
         <el-icon :size="20" color="#657097"><CaretRight /></el-icon
       ></div>
     </div>
@@ -40,14 +40,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useAsideStore } from '@/store/aside';
 import { useUserStore } from '@/store/user';
 import { getCookie } from '@/utils/cache';
+import { storeToRefs } from 'pinia';
 import TypeSelectList from './TypeSelectList.vue';
 import ListTabPanel from './ListTabPanel.vue';
 import FiltrateList from './FiltrateList.vue';
-import { storeToRefs } from 'pinia';
 // 动态组件
 import FiltrateResultList from './FiltrateResultList.vue';
 import RecommendTemplateList from './TemplateList/RecommendTemplateList.vue';
@@ -60,7 +60,7 @@ const { asideActiveType, excludeComponent, asideIsMini, activeListComponent } =
   storeToRefs(asideStore);
 // 用户store
 const userStore = useUserStore();
-const {storeToken} = storeToRefs(userStore);
+const { storeToken } = storeToRefs(userStore);
 
 const tabsPanel = ref([]);
 // 输入框筛选条件
@@ -75,20 +75,17 @@ const componentData = {
 
 // 动态组件列表
 const componentList = {
-  FiltrateResultList: FiltrateResultList,
-  RecommendTemplateList: RecommendTemplateList,
-  CollectTemplateList: CollectTemplateList,
-  OneselfTemplateList: OneselfTemplateList,
+  FiltrateResultList,
+  RecommendTemplateList,
+  CollectTemplateList,
+  OneselfTemplateList,
 };
 
 watch(asideActiveType, (newVal) => {
   tabsPanel.value = newVal.listComponentData?.tabPanel;
 });
-watch(storeToken, (newVal) => {
-  const activeListComponent = asideStore.activeListComponent
-  asideStore.activeListComponent = ''
-  asideStore.activeListComponent = activeListComponent
-})
+watch(storeToken, () => {
+});
 
 // 改变列表展示区域大小
 function changeAsideSize() {
@@ -103,7 +100,9 @@ function changeTabPanel(acitveTab) {
     userStore.loginDialogState = true;
   }
 }
-
+function setRef(el, item) {
+  console.log('🚀 ~ file: DesignAside.vue:104 ~ setRef ~ el,item:', el, item);
+}
 // 筛选
 function queryListHandle(input) {
   filtreInput.value = input.value;

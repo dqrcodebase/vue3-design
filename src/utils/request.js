@@ -5,6 +5,9 @@ import { isNumber } from 'element-plus/es/utils';
 let notification = null;
 const server = Axios.create({
   timeout: 60000,
+  onUploadProgress: (progressEvent) => {
+    console.log(progressEvent);
+  },
 });
 
 server.interceptors.request.use(

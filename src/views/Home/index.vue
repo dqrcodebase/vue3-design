@@ -4,7 +4,9 @@
       <el-header class="header"> <main-header /> </el-header>
       <el-container class="main">
         <el-aside class="aside"><design-aside /></el-aside>
-        <el-main class="design-content">Main</el-main>
+        <el-main class="design-content">
+          <main></main>
+        </el-main>
       </el-container>
     </el-container>
     <login-dialog v-if="loginDialogState" />
@@ -14,7 +16,7 @@
 <script>
 import { computed } from 'vue';
 import { useUserStore } from '@/store/user';
-import { getCookie, getLocalStorage } from '@/utils/cache';
+import { getCookie } from '@/utils/cache';
 import MainHeader from '@/components/MainHeader.vue';
 import LoginDialog from '@/components/LoginDialog.vue';
 import DesignAside from './components/DesignAside.vue';

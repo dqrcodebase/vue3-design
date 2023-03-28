@@ -19,7 +19,8 @@
 import ListComponent from '@/components/list.vue';
 import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
 import { ref, watch } from 'vue';
-import { getListOption, getTemplateList } from '@/hooks/getList';
+import { useListOption } from '@/hooks/useAsideList';
+import { useFiltrateList } from '@/hooks/useFiltrateList';
 
 export default {
   name: 'OneselfTemplateList',
@@ -36,10 +37,10 @@ export default {
   setup(props) {
     const filtrateList = ref([]);
     const collectTotalCount = ref(0);
-    const { getListloading, noMore, getListParems } = getListOption();
+    const { getListloading, noMore, getListParems } = useListOption();
 
     async function getList() {
-      const { list, totalCount } = await getTemplateList('GetTemplateList');
+      const { list, totalCount } = await useFiltrateList('GetTemplateList');
       collectTotalCount.value = totalCount;
       filtrateList.value.push(...list);
     }
@@ -51,9 +52,6 @@ export default {
     async function queryListHandle() {
       getListParems.value.templateType = 1;
       getListParems.value.keyword1 = props.input;
-      console.log(getListParems);
-      //   const { list } = await getTemplateList('GetTemplateList');
-      //   filtrateList.value.push(...list);
     }
 
     watch(

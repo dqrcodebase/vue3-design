@@ -16,7 +16,7 @@
             <template v-slot:immobilization>
               <div class="space-between list-head">
                 <span class="left">{{ item.name }}</span>
-                <span class="right" @click="moreHandle(item)"
+                <span class="right" @click="useMoreList(item)"
                   >更多<el-icon :size="14"><ArrowRight /></el-icon
                 ></span>
               </div>
@@ -34,7 +34,7 @@
       :loading="getListloading"
       :noMore="noMore"
       @load="getMoreData"
-      @changeCollectState="changeCollectState">
+      @changeCollectState="useCollectState">
       <div class="list-head">
         <span class="back-button" @click="backGroup"
           ><el-icon :size="14"><ArrowLeft /></el-icon
@@ -51,12 +51,12 @@ import { useAsideStore } from '@/store/aside';
 import ListComponent from '@/components/list.vue';
 import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
 import {
-  getListOption,
-  getTemplateList,
-  changeCollectState,
-} from '@/hooks/getList';
+  useListOption,
+  useCollectState,
+} from '@/hooks/useAsideList';
 import { getCookie } from '@/utils/cache';
 import { useUserStore } from '@/store/user';
+import { useList, useMoreList } from './Hooks/useTemplateList';
 
 // 用户store
 const userStore = useUserStore();
@@ -67,7 +67,7 @@ const noGroupData = ref({
   name: '',
   list: [],
 });
-const { getListloading, noMore, getListParems } = getListOption();
+const { getListloading, noMore, getListParems } = useListOption();
 getListParems.value.templateType = 1;
 const asideIsMini = computed(() => asideStore.asideIsMini);
 const { getData } = getCurrentInstance().appContext.config.globalProperties;
@@ -88,35 +88,46 @@ function getTemplateListNew() {
     groupRecommendTemplateList.value.push(...res.data);
   });
 }
+// 展示更多列表
 function moreHandle(item) {
   isGroup.value = false;
   noGroupData.value.name = item.name;
   noGroupData.value.list = [...item.items];
   noGroupData.value.kId = item.kId;
   getListParems.value.kId = noGroupData.value.kId;
+  getListParems.value.pageIndex = 0;
 }
+// 返回分组列表
 function backGroup() {
   isGroup.value = true;
-  getListParems.value.pageIndex = 1;
+  getListParems.value.pageIndex = 0;
   noGroupData.value.list = [];
   noMore.value = false;
 }
+// 加载更多
 async function getMoreData() {
   getListParems.value.kId = noGroupData.value.kId;
   getListParems.value.pageIndex += 1;
-  const { list } = await getTemplateList('GetTemplateList');
+  const params = {
+    templateType: 1,
+    ...getListParems.value,
+  };
+  const { list, totalCount } = await useList('GetTemplateList', params);
   noGroupData.value.list.push(...list);
+  noMore.value = noGroupData.value.list.length >= totalCount;
 }
+// 分组列表
 function groupItemList(item) {
   const value = asideIsMini.value
     ? item.items.filter((it, index) => index < 4)
     : item.items.filter((it, index) => index < 12);
   return value;
 }
+// 收藏样版
 function changeGroupCollectState(items, item) {
   if (!getCookie('iyuanwu_token')) {
     userStore.loginDialogState = true;
-  } 
+  }
   const params = { tId: items.tId };
   getData('CollectTemplate', params, { extra: true }).then((res) => {
     if (res.code === 1) {

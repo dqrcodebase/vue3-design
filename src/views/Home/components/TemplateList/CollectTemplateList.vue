@@ -16,57 +16,44 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import ListComponent from '@/components/list.vue';
 import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
 import { ref, onMounted } from 'vue';
 import {
-  getListOption,
-  getTemplateList,
-  changeCollectState as changeState,
-  useKeepAlive,
-} from '@/hooks/getList';
+  useListOption,
+  useCollectState,
+} from '@/hooks/useAsideList';
+import { useList } from './Hooks/useTemplateList';
 
-export default {
-  name: 'CollectTemplateList',
-  components: {
-    ListComponent,
-    AsideListSkeleton,
-  },
-  setup() {
-    const collectList = ref([]);
-    const collectTotalCount = ref(0);
-    const { getListloading, noMore, getListParems } = getListOption();
-    getListParems.value.templateType = 2;
-    async function getList() {
-      const { list, totalCount } = await getTemplateList('GetTemplateList');
-      collectTotalCount.value = totalCount;
-      collectList.value.push(...list);
-    }
-    function getMoreData() {
-      getListParems.value.pageIndex += 1;
-      getList();
-    }
-    async function changeCollectState(items) {
-      const item = await changeState(items);
-      collectTotalCount.value = item.isCollect
-        ? collectTotalCount.value + 1
-        : collectTotalCount.value - 1;
-    }
-    onMounted(() => {
-      useKeepAlive();
-      getList();
-    });
-    return {
-      getListloading,
-      noMore,
-      collectList,
-      collectTotalCount,
-      getMoreData,
-      changeCollectState,
-    };
-  },
-};
+const collectList = ref([]);
+const collectTotalCount = ref(0);
+const { getListloading, noMore, getListParems } = useListOption();
+getListParems.value.templateType = 2;
+async function getList() {
+  const params = {
+    templateType: 2,
+    ...getListParems.value,
+  };
+  const { list, totalCount } = await useList('GetTemplateList', params);
+  collectTotalCount.value = totalCount;
+  collectList.value.push(...list);
+  getListloading.value = false;
+  noMore.value = collectList.value.length >= totalCount;
+}
+function getMoreData() {
+  getListParems.value.pageIndex += 1;
+  getList();
+}
+async function changeCollectState(items) {
+  const item = await useCollectState(items);
+  collectTotalCount.value = item.isCollect
+    ? collectTotalCount.value + 1
+    : collectTotalCount.value - 1;
+}
+onMounted(() => {
+  getList();
+});
 </script>
 
 <style scoped></style>

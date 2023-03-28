@@ -16,45 +16,37 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import ListComponent from '@/components/list.vue';
 import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
 import { ref, onMounted } from 'vue';
-import { getListOption, getTemplateList } from '@/hooks/getList';
+import { useListOption } from '@/hooks/useAsideList';
+import { useList } from './Hooks/useTemplateList';
 
-export default {
-  name: 'OneselfTemplateList',
-  components: {
-    ListComponent,
-    AsideListSkeleton,
-  },
-  setup() {
-    const oneselfList = ref([]);
-    const collectTotalCount = ref(0);
-    const { getListloading, noMore, getListParems } = getListOption();
-    getListParems.value.templateType = 3;
-    async function getList() {
-      const { list, totalCount } = await getTemplateList('GetTemplateList');
-      collectTotalCount.value = totalCount;
-      oneselfList.value.push(...list);
-    }
+const oneselfList = ref([]);
+const collectTotalCount = ref(0);
+const { getListloading, noMore, getListParems } = useListOption();
+getListParems.value.templateType = 3;
+async function getList() {
+  const params = {
+    templateType: 2,
+    ...getListParems.value,
+  };
+  const { list, totalCount } = await useList('GetTemplateList', params);
+  collectTotalCount.value = totalCount;
+  oneselfList.value.push(...list);
+  getListloading.value = false;
+  noMore.value = oneselfList.value.length >= totalCount;
+}
 
-    function getMoreData() {
-      getListParems.value.pageIndex += 1;
-      getList();
-    }
-    onMounted(() => {
-      getList();
-    });
-    return {
-      getListloading,
-      noMore,
-      oneselfList,
-      collectTotalCount,
-      getMoreData,
-    };
-  },
-};
+function getMoreData() {
+  getListParems.value.pageIndex += 1;
+  getList();
+}
+onMounted(() => {
+  getList();
+});
+
 </script>
 
 <style scoped></style>

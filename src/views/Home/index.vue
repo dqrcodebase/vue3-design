@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue';
 import { useUserStore } from '@/store/user';
 import { getCookie } from '@/utils/cache';

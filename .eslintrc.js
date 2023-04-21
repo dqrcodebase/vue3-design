@@ -1,26 +1,18 @@
 module.exports = {
   root: true,
   env: {
-    node: true,
+    node: true
   },
-  extends: ['plugin:vue/vue3-essential', '@vue/airbnb'],
+  'extends': [
+    'plugin:vue/vue3-essential',
+    'eslint:recommended',
+    '@vue/typescript/recommended'
+  ],
   parserOptions: {
-    parser: 'babel-eslint',
+    ecmaVersion: 2020
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    // 要求 require() 出现在顶层模块作用域中
-    // 'global-require': 0,
-    //  是否禁止使用特定的语法
-    'no-restricted-syntax': 0,
-    // 打开大括号之后和关闭大括号之前执行的换行规则
-    'object-curly-newline': ['error', { consistent: true }],
-    // 强制操作符使用一致的换行符风格
-    'operator-linebreak': [
-      'error',
-      'after',
-      { overrides: { '?': 'before', ':': 'before' } },
-    ],
-  },
-};
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+  }
+}

@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   lintOnSave: false,
   devServer: {
@@ -45,13 +47,16 @@ module.exports = {
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
-          loader: 'ts-loader',
+          test: /\.(ts|tsx)?$/,
           exclude: /node_modules/,
-          options: {
-            appendTsSuffixTo: [/\.vue$/],
+          use: {
+            loader: 'ts-loader',
+            options: {
+              appendTsSuffixTo: [/\.vue$/],
+            },
           },
         },
+        
       ],
     },
   },

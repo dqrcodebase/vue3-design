@@ -43,11 +43,11 @@ module.exports = {
     },
   },
   configureWebpack: {
-    resolve: { extensions: ['.ts', '.tsx', '.js', '.json'] },
+    resolve: { extensions: ['.ts', '.vue', '.js', '.json'] },
     module: {
       rules: [
         {
-          test: /\.(ts|tsx)?$/,
+          test: /\.(ts|vue)?$/,
           exclude: /node_modules/,
           use: {
             loader: 'ts-loader',

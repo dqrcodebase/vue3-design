@@ -2,7 +2,7 @@ import Axios from 'axios';
 import { ElNotification } from 'element-plus';
 import { isNumber } from 'element-plus/es/utils';
 
-let notification:any = null;
+let notification = null;
 const server = Axios.create({
   timeout: 60000,
   onUploadProgress: (progressEvent) => {

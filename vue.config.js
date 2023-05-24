@@ -1,5 +1,6 @@
 const path = require('path');
-
+const CacheLoader = require('cache-loader');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 module.exports = {
   lintOnSave: false,
   devServer: {
@@ -43,11 +44,14 @@ module.exports = {
     },
   },
   configureWebpack: {
-    resolve: { extensions: ['.ts', '.vue', '.js', '.json'] },
+    plugins: [
+      new HardSourceWebpackPlugin()
+    ],
+    resolve: { extensions: ['.ts', '.jsx', '.vue', '.js', '.json'] },
     module: {
       rules: [
         {
-          test: /\.(ts|vue)?$/,
+          test: /\.(ts|jsx)?$/,
           exclude: /node_modules/,
           use: {
             loader: 'ts-loader',
@@ -56,7 +60,18 @@ module.exports = {
             },
           },
         },
-        
+        {
+          test: /\.js$/,
+          use: [
+            {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: path.resolve('.cache')
+              }
+            },
+            'babel-loader'
+          ]
+        }
       ],
     },
   },

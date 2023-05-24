@@ -6,3 +6,5 @@ declare module '*.vue' {
 }
 
 declare module 'less'
+declare module 'js-cookie'
+declare module '@/api/index'

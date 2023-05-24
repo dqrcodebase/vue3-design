@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive } from 'vue';
 import { useUserStore } from '@/store/user';
 import { ElMessage } from 'element-plus';
 
@@ -49,7 +49,6 @@ const formInline = reactive({
 });
 const loading = ref(false);
 
-onMounted(() => {});
 
 function close() {
   userStore.loginDialogState = false;

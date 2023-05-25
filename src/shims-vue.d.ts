@@ -5,6 +5,16 @@ declare module '*.vue' {
   export default component
 }
 
-declare module 'less'
+declare module '*.md' 
+declare module '*.js' 
+declare module '*.png' 
+declare module '*.jpg' 
 declare module 'js-cookie'
-declare module '@/api/index'
+declare module 'vue'
+declare module 'element-plus*'
+declare module '@element-plus*'
+declare module 'vue-lazyload'
+declare module 'require'
+declare module 'process'
+declare module 'vue-class-component'
+declare module 'axios'

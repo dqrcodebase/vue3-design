@@ -27,7 +27,7 @@ server.interceptors.response.use(
   (response) => {
     const { data } = response;
     if (isNumber(data.data) && data.code === 1) {
-      notification?.close();
+      notification && notification.close();
       notification = ElNotification({
         title: '提示',
         message: data.msg || '未知错误',

@@ -1,4 +1,4 @@
-import { store } from '@/store';
+import { store } from '@/store/index.js';
 import { defineStore } from 'pinia';
 import getData from '@/api/index';
 import {
@@ -17,17 +17,17 @@ export const useUserStore = defineStore({
     storeToken: {
       accessToken: '',
       refreshToken: '',
-      expiration: '',
+      expiration: 0,
     },
   }),
   actions: {
-    setCacheToken({ accessToken, refreshToken, expiration }) {
+    setCacheToken({ accessToken = '', refreshToken = '', expiration = 86400 }) {
       const expiresTime = expiration / 60 / 60 / 24; // validitySecond单位是秒转换为单位是天
       setCookie('iyuanwu_token', accessToken, { expires: expiresTime });
       setCookie('iyuanwu_refreshToken', refreshToken, { expires: 15 });
       setCookie('iyuanwu_expiration', expiration, { expires: expiresTime });
     },
-    setStoreToken({ accessToken, refreshToken, expiration }) {
+    setStoreToken({ accessToken = '', refreshToken = '', expiration = 86400 }) {
       this.storeToken = { accessToken, refreshToken, expiration };
     },
     async getUserInfo() {
@@ -53,7 +53,7 @@ export const useUserStore = defineStore({
       removeCookie('iyuanwu_expiration');
       removeLocalStorage('userInfo');
       this.setUserInfo({});
-      this.setStoreToken({ accessToken: '', refreshToken: '', expiration: '' });
+      this.setStoreToken({ accessToken: '', refreshToken: '', expiration: 86400 });
     },
     async login(params) {
       try {

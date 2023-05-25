@@ -1,6 +1,6 @@
-import request from '@/utils/request';
-import { getCookie } from '@/utils/cache';
-import { tuapi, tuOd, worksapi, accountapi, gatewayapi } from './config/index';
+import request from '@/utils/request.js';
+import { getCookie } from '@/utils/cache.js';
+import { tuapi, tuOd, worksapi, accountapi, gatewayapi } from './config/index.js';
 import { options } from 'less';
 
 export default function (

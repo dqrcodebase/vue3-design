@@ -13,32 +13,24 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue';
-import { useUserStore } from '@/store/user';
-import { getCookie } from '@/utils/cache';
+import { useUserStore } from '@/store/user.js';
+import { getCookie } from '@/utils/cache.js';
 import MainHeader from '@/components/MainHeader.vue';
 import LoginDialog from '@/components/LoginDialog.vue';
 import DesignAside from './components/DesignAside.vue';
 
-export default {
-  name: 'Home',
-  components: { DesignAside, MainHeader, LoginDialog },
-  setup() {
-    const userStore = useUserStore();
-    const accessToken = getCookie('iyuanwu_token');
-    const refreshToken = getCookie('iyuanwu_refreshToken');
-    const expiration = getCookie('iyuanwu_expiration');
+const userStore = useUserStore();
+const accessToken = getCookie('iyuanwu_token');
+const refreshToken = getCookie('iyuanwu_refreshToken');
+const expiration = getCookie('iyuanwu_expiration');
 
-    if (accessToken) {
-      userStore.setStoreToken({ accessToken, refreshToken, expiration });
-      userStore.getUserInfo();
-    }
-    return {
-      loginDialogState: computed(() => userStore.loginDialogState),
-    };
-  },
-};
+if (accessToken) {
+  userStore.setStoreToken({ accessToken, refreshToken, expiration });
+  userStore.getUserInfo();
+}
+const loginDialogState = computed(() => userStore.loginDialogState);
 </script>
 <style lang="less" scoped>
 .design {

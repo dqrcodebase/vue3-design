@@ -6,9 +6,9 @@ import 'element-plus/dist/index.css';
 import '@/assets/style/common.less';
 import '@/assets/style/init.less';
 
-import getData from '@/api/index';
-import { setupRouter } from '@/router';
-import { setupStore } from '@/store/index';
+import getData from '@/api/index.js';
+import { setupRouter } from '@/router/index.js';
+import { setupStore } from '@/store/index.js';
 import App from './App.vue';
 
 const errorImg = require('./assets/images/common/loading-err.png');

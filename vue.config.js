@@ -43,6 +43,13 @@ module.exports = {
       },
     },
   },
+  // transpileDependencies: [
+  //   'vue',
+  //   'vuex',
+  //   'vue-router',
+  //   'axios',
+  //   'element-plus'
+  // ],
   configureWebpack: {
     plugins: [
       new HardSourceWebpackPlugin()
@@ -53,12 +60,16 @@ module.exports = {
         {
           test: /\.(ts|jsx)?$/,
           exclude: /node_modules/,
-          use: {
-            loader: 'ts-loader',
-            options: {
-              appendTsSuffixTo: [/\.vue$/],
-            },
-          },
+          use: [
+            // "thread-loader",
+            {
+              loader: 'ts-loader',
+              options: {
+                appendTsSuffixTo: [/\.vue$/],
+                happyPackMode: true
+              },
+            }
+          ],
         },
         {
           test: /\.js$/,
@@ -73,6 +84,6 @@ module.exports = {
           ]
         }
       ],
-    },
+    }
   },
 };

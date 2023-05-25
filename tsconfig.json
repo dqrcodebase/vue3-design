@@ -5,18 +5,15 @@
     "strict": true,
     "jsx": "preserve",
     "moduleResolution": "node",
+    "experimentalDecorators": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
-    "noImplicitAny": false,
     "sourceMap": true,
-    "noEmit": false,
     "baseUrl": ".",
-    "types": [
-      "webpack-env"
-    ],
+    "noImplicitAny": false,
     "paths": {
       "@/*": [
         "src/*"
@@ -34,9 +31,13 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx", 
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "types": [
+    "webpack-env",
+    "node"
+  ],
 }

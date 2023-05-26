@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useUserStore } from '@/store/user';
 import { useAsideStore } from '@/store/aside';
 import { storeToRefs } from 'pinia';
@@ -52,8 +52,8 @@ const typeSelectList = [
     selectType: '图案',
     listComponentData: {
       placeholder: '图案名称',
-      tabPanel: ['推荐图案', '收藏图案', '我的图案'],
-      dynamicComponent: 'FiltrateList',
+      tabPanel: [{ id: 'RecommendPatternList', title: '推荐图案' }, { id: '', title: '收藏图案' },  { id: '', title: '我的图案' }],
+      dynamicComponent: 'RecommendPatternList',
     },
   },
   {
@@ -81,7 +81,14 @@ asideStore.asideActiveType = typeSelectList[asideStore.asideActiveIndex];
 function loginHandle() {
   userStore.loginDialogState = true;
 }
-function selectTypeHandle(item, index) {
+
+interface itmeProp {
+  listComponentData: {
+    dynamicComponent: string;
+  };
+}
+
+function selectTypeHandle(item:itmeProp, index) {
   asideStore.asideActiveType = typeSelectList[asideStore.asideActiveIndex];
   asideStore.asideActiveIndex = index;
   asideStore.activeListComponent = item.listComponentData.dynamicComponent;

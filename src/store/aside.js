@@ -6,7 +6,7 @@ export const useAsideStore = defineStore({
   state: () => ({
     // 列表展示区域是否为mini模式
     asideIsMini: true,
-    // 当前列表展示什么类型的图片
+    // 当前选择的侧边栏类型数据
     asideActiveType: {},
     // 当前列表展示的索引
     asideActiveIndex: 0,

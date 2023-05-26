@@ -12,7 +12,10 @@ export default function (
   const config = {
     data,
     method: requestType,
-    headers: {},
+    url:'',
+    headers: {
+      token:''
+    },
   };
   if (accessToken) {
     config.headers.token = accessToken;
@@ -38,9 +41,7 @@ export default function (
       sysName: 'IYWTU',
       ts: 1657076265000,
       version: '1.0.0',
-      data: {
-        ...data,
-      },
+      data: data
     };
   }
 

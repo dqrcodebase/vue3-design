@@ -39,7 +39,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useAsideStore } from '@/store/aside';
 import { useUserStore } from '@/store/user';
@@ -53,7 +53,7 @@ import FiltrateResultList from './FiltrateResultList.vue';
 import RecommendTemplateList from './TemplateList/RecommendTemplateList.vue';
 import CollectTemplateList from './TemplateList/CollectTemplateList.vue';
 import OneselfTemplateList from './TemplateList/OneselfTemplateList.vue';
-
+import RecommendPatternList from './PatternList/RecommendPatternList.vue';
 // 侧边栏store
 const asideStore = useAsideStore();
 const { asideActiveType, excludeComponent, asideIsMini, activeListComponent } =
@@ -79,12 +79,17 @@ const componentList = {
   RecommendTemplateList,
   CollectTemplateList,
   OneselfTemplateList,
+  RecommendPatternList
 };
 
 watch(asideActiveType, (newVal) => {
-  tabsPanel.value = newVal.listComponentData?.tabPanel;
+  console.log("🚀 ~ file: DesignAside.vue:86 ~ watch ~ newVal:", newVal)
+  tabsPanel.value = newVal.listComponentData && newVal.listComponentData.tabPanel;
+
 });
-watch(storeToken, () => {
+watch(activeListComponent, () => {
+  console.log('----------------',activeListComponent);
+
 });
 
 // 改变列表展示区域大小
@@ -96,12 +101,14 @@ function changeAsideSize() {
 function changeTabPanel(acitveTab) {
   if (getCookie('iyuanwu_token')) {
     asideStore.activeListComponent = acitveTab.id;
+
   } else {
     userStore.loginDialogState = true;
   }
 }
 function setRef(el, item) {
   console.log('🚀 ~ file: DesignAside.vue:104 ~ setRef ~ el,item:', el, item);
+  
 }
 // 筛选
 function queryListHandle(input) {

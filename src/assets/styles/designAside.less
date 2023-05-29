@@ -1,0 +1,71 @@
+.design-wrap-aside {
+  display: flex;
+  height: 100%;
+}
+
+.aside-list {
+  border: 1px solid #eeeeee;
+  padding: 24px 0 0 28px;
+  width: 838px;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+
+  &.is-hide {
+    width: 310px;
+  }
+
+  .control-aside-size {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    right: -30px;
+    width: 42px;
+    height: 100px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background: #000000;
+    z-index: -1;
+    border-radius: 10px;
+    padding: 0px 7px;
+  }
+}
+
+.template-components {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+
+  .filtrate-list {
+    margin-right: 28px;
+  }
+}
+
+.design-gallery-list {
+  margin-top: 12px;
+  height: 100%;
+  overflow: hidden;
+}
+
+:deep(.list-head) {
+  margin-top: 12px;
+  padding-bottom: 20px;
+
+  .right {
+    font-size: 14px;
+    color: #667198;
+    cursor: pointer;
+  }
+}
+
+:deep(.list-component-wrap) {
+  overflow: hidden;
+  flex: 1;
+  padding-right: 28px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

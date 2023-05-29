@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import getData from '@/api/index';
+import getData from '@api/index';
 import { useAsideStore } from '@/store/aside';
 
 const asideStore = useAsideStore();

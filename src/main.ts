@@ -3,10 +3,10 @@ import ElementPlus from 'element-plus';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import VueLazyload from 'vue-lazyload';
 import 'element-plus/dist/index.css';
-import '@/assets/style/common.less';
-import '@/assets/style/init.less';
+import '@styles/common.less';
+import '@styles/init.less';
 
-import getData from '@/api/index';
+import getData from '@api/index';
 import { setupRouter } from '@/router/index.js';
 import { setupStore } from '@/store/index.js';
 import App from './App.vue';

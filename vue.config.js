@@ -1,6 +1,4 @@
 const path = require('path');
-// const CacheLoader = require('cache-loader');
-// const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 module.exports = {
   lintOnSave: false,
   devServer: {
@@ -44,10 +42,21 @@ module.exports = {
     },
   },
   configureWebpack: {
-    // plugins: [
-    //   new HardSourceWebpackPlugin()
-    // ],
-    resolve: { extensions: ['.ts', '.jsx', '.vue', '.js', '.json'] },
+    resolve: {
+      extensions: ['.ts', '.jsx', '.vue', '.js', '.json'],      
+      // 配置别名
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+        '@assets': path.resolve(__dirname, './src/assets'),
+        '@components': path.resolve(__dirname, './src/components'),
+        '@views': path.resolve(__dirname, './src/views'),
+        '@utils': path.resolve(__dirname, './src/utils'),
+        '@api': path.resolve(__dirname, './src/api'),
+        '@store': path.resolve(__dirname, './src/store'),
+        '@router': path.resolve(__dirname, './src/router'),
+        '@styles': path.resolve(__dirname, './src/assets/styles'),
+      },
+    },
     module: {
       rules: [
         {
@@ -64,18 +73,6 @@ module.exports = {
             }
           ],
         },
-        // {
-        //   test: /\.js$/,
-        //   use: [
-        //     {
-        //       loader: 'cache-loader',
-        //       options: {
-        //         cacheDirectory: path.resolve('.cache')
-        //       }
-        //     },
-        //     'babel-loader'
-        //   ]
-        // }
       ],
     }
   },

@@ -25,27 +25,5 @@ function logout() {
 </script>
 
 <style lang="less">
-.aside-dropdown {
-  &.el-popover {
-    width: 98px;
-    min-width: 98px;
-    padding: 5px 0;
-  }
-  .entrance-list {
-    width: 100%;
-    .entrance-item {
-      width: 100%;
-      color: #666e88;
-      font-size: 12px;
-      line-height: 36px;
-      padding: 0 15px;
-      box-sizing: border-box;
-      cursor: pointer;
-      &:hover {
-        color: var(--main-color);
-        background-color: var(--main-bg-color);
-      }
-    }
-  }
-}
+@import '@styles/asideDropdown.less';
 </style>

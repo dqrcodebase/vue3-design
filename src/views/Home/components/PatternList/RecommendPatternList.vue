@@ -152,35 +152,5 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-.group-wrap {
-  height: 100%;
-}
-.list-head {
-  margin-top: 12px;
-  padding-bottom: 20px;
-}
-.list-component-wrap {
-  .back-button {
-    cursor: pointer;
-    i {
-      color: #666e88;
-      vertical-align: -1px;
-    }
-  }
-  .el-scrollbar {
-    height: calc(100% - 22px);
-  }
-}
-.group-wrap {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  .el-scrollbar {
-    color: #222;
-  }
-}
-:v-deep .el-scrollbar__bar {
-  right: 8px;
-}
+@import '@styles/recommendPatternList.less';
 </style>

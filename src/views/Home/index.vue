@@ -33,23 +33,5 @@ if (accessToken) {
 const loginDialogState = computed(() => userStore.loginDialogState);
 </script>
 <style lang="less" scoped>
-.design {
-  height: 100%;
-  .is-vertical {
-    height: 100%;
-  }
-}
-.main {
-  height: calc(100% - 60px);
-}
-.el-aside {
-  width: auto;
-  overflow: initial;
-}
-.header,
-.aside,
-.design-content {
-  border: 1px solid #eeeeee;
-  border-radius: 4px;
-}
+@import '@styles/index.less';
 </style>

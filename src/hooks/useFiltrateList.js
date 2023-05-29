@@ -1,4 +1,4 @@
-import getData from '@/api/index';
+import getData from '@api/index';
 import {
   useListOption,
 } from '@/hooks/useAsideList';

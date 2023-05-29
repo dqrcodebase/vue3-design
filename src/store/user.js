@@ -1,6 +1,6 @@
 import { store } from '@/store/index.js';
 import { defineStore } from 'pinia';
-import getData from '@/api/index';
+import getData from '@api/index';
 import {
   setCookie,
   setLocalStorage,

@@ -17,8 +17,8 @@
 </template>
 
 <script setup>
-import ListComponent from '@/components/list.vue';
-import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
+import ListComponent from '@/components/List';
+import AsideListSkeleton from '@/components/AsideListSkeleton';
 import { ref, onMounted } from 'vue';
 import {
   useListOption,

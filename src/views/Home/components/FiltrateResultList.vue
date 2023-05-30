@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import ListComponent from '@/components/list.vue';
-import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
+import ListComponent from '@/components/List';
+import AsideListSkeleton from '@/components/AsideListSkeleton';
 import { ref, watch } from 'vue';
 import { useListOption } from '@/hooks/useAsideList';
 import { useFiltrateList } from '@/hooks/useFiltrateList';

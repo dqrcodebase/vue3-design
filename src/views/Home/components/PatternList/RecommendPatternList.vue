@@ -48,8 +48,8 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useAsideStore } from '@/store/aside';
-import ListComponent from '@/components/list.vue';
-import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
+import ListComponent from '@/components/List';
+import AsideListSkeleton from '@/components/AsideListSkeleton';
 import { useListOption, useCollectState } from '@/hooks/useAsideList';
 import { getCookie } from '@/utils/cache';
 import { useUserStore } from '@/store/user';
@@ -159,16 +159,15 @@ async function getMoreData() {
   if (noGroupData.value.type === 'category') {
     res = await getCategoryList();
     noGroupData.value.list.push(...res.data);
-     noMore.value = getListParems.value.pageSize > res.data.length;
+    noMore.value = getListParems.value.pageSize > res.data.length;
   } else if (noGroupData.value.type === 'material') {
     res = await getMaterialList();
     noGroupData.value.list.push(...res.data);
-     noMore.value = getListParems.value.pageSize > res.data.length;
+    noMore.value = getListParems.value.pageSize > res.data.length;
   } else if (noGroupData.value.type === 'mentality') {
     res = await getMentalityList();
     noGroupData.value.list.push(...res.data.list);
     noMore.value = noGroupData.value.list.length >= res.data.totalCount;
-    console.log("🚀 ~ file: RecommendPatternList.vue:171 ~ getMoreData ~ noMore.value:", noMore.value)
   }
 }
 // 分组列表

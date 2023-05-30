@@ -48,8 +48,8 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useAsideStore } from '@/store/aside';
-import ListComponent from '@/components/list.vue';
-import AsideListSkeleton from '@/components/AsideListSkeleton.vue';
+import ListComponent from '@/components/List';
+import AsideListSkeleton from '@/components/AsideListSkeleton';
 import {
   useListOption,
   useCollectState,

@@ -17,9 +17,9 @@
 import { computed } from 'vue';
 import { useUserStore } from '@/store/user.js';
 import { getCookie } from '@/utils/cache.js';
-import MainHeader from '@/components/MainHeader.vue';
-import LoginDialog from '@/components/LoginDialog.vue';
-import DesignAside from './components/DesignAside.vue';
+import MainHeader from '@/components/MainHeader';
+import LoginDialog from '@/components/LoginDialog';
+import DesignAside from './components/DesignAside';
 
 const userStore = useUserStore();
 const accessToken = getCookie('iyuanwu_token');

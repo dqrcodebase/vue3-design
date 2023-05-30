@@ -30,8 +30,8 @@
 </template>
 
 <script setup>
-import ListFooter from './ListFooter.vue';
-import NoData from './NoData/index.vue';
+import ListFooter from '@components/ListFooter';
+import NoData from '@components/NoData';
 
 defineProps({
   list: {

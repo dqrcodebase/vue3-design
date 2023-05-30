@@ -52,7 +52,11 @@ const typeSelectList = [
     selectType: '图案',
     listComponentData: {
       placeholder: '图案名称',
-      tabPanel: [{ id: 'RecommendPatternList', title: '推荐图案' }, { id: '', title: '收藏图案' },  { id: '', title: '我的图案' }],
+      tabPanel: [
+        { id: 'RecommendPatternList', title: '推荐图案' },
+        { id: 'CollectPatternList', title: '收藏图案' },
+        { id: '', title: '我的图案' },
+      ],
       dynamicComponent: 'RecommendPatternList',
     },
   },
@@ -88,7 +92,7 @@ interface itmeProp {
   };
 }
 
-function selectTypeHandle(item:itmeProp, index) {
+function selectTypeHandle(item: itmeProp, index) {
   asideStore.asideActiveType = typeSelectList[asideStore.asideActiveIndex];
   asideStore.asideActiveIndex = index;
   asideStore.activeListComponent = item.listComponentData.dynamicComponent;

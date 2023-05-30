@@ -90,7 +90,7 @@ const { getData } = getCurrentInstance().appContext.config.globalProperties;
 
 function getInitList() {
   getListloading.value = true;
-  Promise.all([getMentalityList(), getCategoryList(), getMaterialList()]).then(
+  Promise.race([getMentalityList(), getCategoryList(), getMaterialList()]).then(
     () => {
       getListloading.value = false;
     },
@@ -103,7 +103,6 @@ async function getMentalityList() {
     ...getListParems.value,
     classificationId: groupRecommendList.value.mentality.kId,
   });
-  getListloading.value = false;
   groupRecommendList.value.mentality.items.push(...res.data.list);
 
   return res;
@@ -115,7 +114,6 @@ async function getCategoryList() {
     ...getListParems.value,
     creationArea: groupRecommendList.value.category.kId,
   });
-  getListloading.value = false;
   groupRecommendList.value.category.items.push(...res.data);
 
   return res;
@@ -127,7 +125,6 @@ async function getMaterialList() {
     ...getListParems.value,
     creationArea: groupRecommendList.value.material.kId,
   });
-  getListloading.value = false;
   groupRecommendList.value.material.items.push(...res.data);
 
   return res;

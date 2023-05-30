@@ -1,0 +1,41 @@
+.list-component-wrap {
+  .group-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fill,132px);
+    grid-gap: 0 10px;
+    width: 100%;
+  }
+
+  .group-list-detail {
+    padding-bottom: 8px;
+  }
+
+  .group-box{
+    height: 132px;
+    width: 132px;
+    padding: 10px;
+    background: #F1F4F9;
+    border-radius: 2px;
+    border: 1px solid var(--default-border-color);
+    box-sizing: border-box;
+
+    img{
+      height: 50px;
+      width: 50px;
+      margin-bottom: 10px;
+      border-radius: 2px;
+    }
+  }
+
+  .group-title {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--default-text-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+    width: 130px;
+  }
+}

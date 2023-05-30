@@ -8,18 +8,20 @@
       :infinite-scroll-immediate="false"
       :infinite-scroll-distance="200">
       <template v-if="list.length > 0">
-      <ul class="list" >
-        <li class="item" v-for="item in list" :key="item.tId">
-          <div
-            v-if="isShowCollect"
-            class="collect"
-            @click="changeCollectState(item)">
-            <el-icon v-show="!item.isCollect"><Star /></el-icon>
-            <el-icon v-show="item.isCollect"><StarFilled /></el-icon>
-          </div>
-          <img class="cover" v-lazy="item.cover" :alt="item.name" />
-        </li>
-      </ul>
+        <slot name="list">
+          <ul class="list" >
+            <li class="item" v-for="item in list" :key="item.tId">
+              <div
+                v-if="isShowCollect"
+                class="collect"
+                @click="changeCollectState(item)">
+                <el-icon v-show="!item.isCollect"><Star /></el-icon>
+                <el-icon v-show="item.isCollect"><StarFilled /></el-icon>
+              </div>
+              <img class="cover" v-lazy="item.cover" :alt="item.name" />
+            </li>
+          </ul>
+        </slot>
       <ListFooter v-if="isShowFooter" :noMore="noMore" />
     </template>
     <div v-else class="show-empty">
@@ -83,7 +85,7 @@ function changeCollectState(item) {
   vertical-align: middle;
   border-radius: 3px;
   margin-bottom: 12px;
-  border: 1px solid #eee;
+  border: 1px solid var(--default-border-color);
   box-sizing: border-box;
   position: relative;
   cursor: pointer;

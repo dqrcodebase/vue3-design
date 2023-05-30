@@ -54,6 +54,7 @@ import RecommendTemplateList from './TemplateList/RecommendTemplateList.vue';
 import CollectTemplateList from './TemplateList/CollectTemplateList.vue';
 import OneselfTemplateList from './TemplateList/OneselfTemplateList.vue';
 import RecommendPatternList from './PatternList/RecommendPatternList.vue';
+import CollectPatternList from './PatternList/CollectPatternList.vue';
 // 侧边栏store
 const asideStore = useAsideStore();
 const { asideActiveType, excludeComponent, asideIsMini, activeListComponent } =
@@ -79,7 +80,8 @@ const componentList = {
   RecommendTemplateList,
   CollectTemplateList,
   OneselfTemplateList,
-  RecommendPatternList
+  RecommendPatternList,
+  CollectPatternList
 };
 
 watch(asideActiveType, (newVal) => {
@@ -99,6 +101,7 @@ function changeAsideSize() {
 
 // 切换列表
 function changeTabPanel(acitveTab) {
+  console.log("🚀 ~ file: DesignAside.vue:102 ~ changeTabPanel ~ acitveTab:", acitveTab)
   if (getCookie('iyuanwu_token')) {
     asideStore.activeListComponent = acitveTab.id;
 

@@ -16,7 +16,7 @@
             <template v-slot:immobilization>
               <div class="space-between list-head">
                 <span class="left">{{ item.name }}</span>
-                <span class="right" @click="useMoreList(item)"
+                <span class="right" @click="moreHandle(item)"
                   >更多<el-icon :size="14"><ArrowRight /></el-icon
                 ></span>
               </div>

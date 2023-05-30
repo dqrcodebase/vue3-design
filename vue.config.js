@@ -3,6 +3,7 @@ module.exports = {
   lintOnSave: false,
   devServer: {
     port: 3070,
+    hot: true,
     proxy: {
       '/accountapi': {
         target: 'https://account.iyw.cn/',

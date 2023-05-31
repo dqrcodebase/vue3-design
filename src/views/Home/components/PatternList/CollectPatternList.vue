@@ -1,6 +1,6 @@
 <template>
   <aside-list-skeleton v-if="getListloading && collectList.length === 0" />
-  <div v-if="isGroup" class="group-wrap"> 111111</div>
+  <div v-if="isGroup" class="group-wrap"> 3333</div>
   <div v-else class="list-component-wrap">
     <list-component
       class="list-component"

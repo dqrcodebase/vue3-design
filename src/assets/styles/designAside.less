@@ -1,10 +1,15 @@
+.justify-between {
+  display: flex;
+  justify-content: center;
+}
+
 .design-wrap-aside {
   display: flex;
   height: 100%;
 }
 
 .aside-list {
-  border: 1px solid #eeeeee;
+  border: 1px solid #eee;
   padding: 24px 0 0 28px;
   width: 900px;
   height: 100%;
@@ -17,19 +22,18 @@
   }
 
   .control-aside-size {
+    .justify-between();
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
     right: -30px;
     width: 42px;
     height: 100px;
-    display: flex;
-    justify-content: flex-end;
     align-items: center;
-    background: #000000;
+    background: #000;
     z-index: -1;
     border-radius: 10px;
-    padding: 0px 7px;
+    padding: 0 7px;
   }
 }
 
@@ -37,7 +41,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: #fff;
 
   .filtrate-list {
     margin-right: 28px;

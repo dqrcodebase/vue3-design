@@ -42,9 +42,15 @@ module.exports = {
       },
     },
   },
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'less',
+      patterns: [path.resolve(__dirname, './src/assets/styles/common.less')],
+    },
+  },
   configureWebpack: {
     resolve: {
-      extensions: ['.ts', '.jsx', '.vue', '.js', '.json'],      
+      extensions: ['.ts', '.jsx', '.vue', '.js', '.json'],
       // 配置别名
       alias: {
         '@': path.resolve(__dirname, './src'),
@@ -69,12 +75,12 @@ module.exports = {
               loader: 'ts-loader',
               options: {
                 appendTsSuffixTo: [/\.vue$/],
-                happyPackMode: true
+                happyPackMode: true,
               },
-            }
+            },
           ],
         },
       ],
-    }
+    },
   },
 };

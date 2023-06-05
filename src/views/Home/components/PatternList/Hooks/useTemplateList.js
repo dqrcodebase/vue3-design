@@ -12,10 +12,10 @@ export async function useMoreList() {
 export async function useList(method, params) {
   let list = [];
   let totalCount = 0;
-  await getData(method, params, { extra: true }).then((res) => {
+  await getData(method, params, { extra: false }).then((res) => {
     try {
       totalCount = res.totalCount;
-      list = res.data;
+      list = res.rs;
     } catch (error) {
       console.log(error);
     }

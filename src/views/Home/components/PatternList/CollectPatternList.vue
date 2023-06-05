@@ -1,32 +1,47 @@
 <template>
-  <aside-list-skeleton v-if="getListloading && collectList.length === 0" />
-  <div v-if="isGroup" class="group-wrap flex-v"> 66666</div>
-  <div v-else class="list-component-wrap">
+  <aside-list-skeleton v-if="getListloading && collectGroupList.length === 0" />
+  <div v-show="isGroup" class="list-component-wrap">
     <list-component
       class="list-component"
-      :list="collectList"
+      :list="collectGroupList"
       :loading="getListloading"
       :noMore="noMore"
       @changeCollectState="changeCollectState"
       @load="getMoreData">
       <div class="flex-c-b list-head">
-        <span class="left">收藏({{ collectTotalCount }})</span>
+        <span class="left">收藏({{ collectGroupTotalCount }})</span>
         <span class="right">管理</span>
       </div>
       <template v-slot:list>
         <div class="group-list-detail">
           <div class="group-list">
-            <div v-for="item in 10" class="group-item">
-              <div class="group-box">
-                <img
-                  src="https://chdesign.oss-cn-shanghai.aliyuncs.com/Thumbnail/Iyw/Tu/Creation/20220228/95025/ge2tonrthe2demrqg4ydonrvge2tqnbonjygoxzsha2xqmrygu.jpg?x-oss-process=image/resize,w_900"
-                  alt="" />
+            <div v-for="items in collectGroupList" class="group-item">
+              <div
+                class="group-box flex-c-b-w cursor-pointer"
+                @click="enterDetailList(items)">
+                <img v-for="item in items.imgList" :src="item" alt="" />
               </div>
-              <div class="group-title font-14 mt-10">默认收藏夹</div>
+              <div class="group-title font-14">{{ items.name }}</div>
             </div>
           </div>
         </div>
       </template>
+    </list-component>
+  </div>
+  <div v-show="!isGroup" class="list-component-wrap">
+    <list-component
+      class="list-component"
+      :list="collectList"
+      :loading="getListloading"
+      :noMore="noMore"
+      @load="getMoreData"
+      @changeCollectState="useCollectState">
+      <div class="list-head">
+        <span class="back-button" @click="backGroup"
+          ><el-icon :size="14"> <ArrowLeft /> </el-icon
+          >{{ noGroupData.name }}</span
+        >
+      </div>
     </list-component>
   </div>
 </template>
@@ -36,33 +51,77 @@ import { ref, onMounted } from 'vue';
 import { useListOption, useCollectState } from '@/hooks/useAsideList';
 import { useList } from './Hooks/useTemplateList';
 
+// 收藏列表
+const collectGroupList = ref([]);
 const collectList = ref([]);
-const collectTotalCount = ref(0);
+const collectGroupTotalCount = ref(0);
 const { getListloading, noMore, getListParems } = useListOption();
-getListParems.value.templateType = 2;
-async function getList() {
+const isGroup = ref(true);
+const noGroupData = ref({});
+
+// 获取分组收藏列表
+async function getGroupList() {
   const params = {
-    templateType: 2,
     ...getListParems.value,
+    mode: '1',
+    salesMode: -1,
+    sort: 'zxzp',
   };
-  const { list, totalCount } = await useList('GetTemplateList', params);
-  collectTotalCount.value = totalCount;
+  const { list, totalCount } = await useList('GetCollectionGroupList', params);
+  collectGroupTotalCount.value = totalCount;
+  collectGroupList.value.push(...list);
+  getListloading.value = false;
+  noMore.value = collectGroupList.value.length >= totalCount;
+}
+
+// 获取收藏列表详情
+async function getNoGroupList(groupId) {
+  const params = {
+    ...getListParems.value,
+    groupId,
+    mode: '1',
+    salesMode: -1,
+    sort: 'zxzp',
+  };
+  const { list, totalCount } = await useList('GetMyCollectCreations', params);
   collectList.value.push(...list);
   getListloading.value = false;
-  noMore.value = collectList.value.length >= totalCount;
+  noMore.value = collectGroupList.value.length >= totalCount;
 }
-function getMoreData() {
+
+// 加载更多
+function getMoreGroupData() {
   getListParems.value.pageIndex += 1;
-  getList();
+  getGroupList();
 }
+
+// 进入分组详情
+function enterDetailList(item) {
+  console.log("🚀 ~ file: CollectPatternList.vue:100 ~ enterDetailList ~ item:", item)
+  getListParems.value.pageIndex = 1;
+  isGroup.value = false
+  noGroupData.value = item;
+  getNoGroupList(item.groupId);
+}
+
+// 返回分组列表
+function backGroup() {
+  isGroup.value = true;
+  getListParems.value.pageIndex = 1;
+  noGroupData.value = {};
+  noMore.value = false;
+}
+
+// 修改收藏状态
 async function changeCollectState(items) {
   const item = await useCollectState(items);
-  collectTotalCount.value = item.isCollect
-    ? collectTotalCount.value + 1
-    : collectTotalCount.value - 1;
+  collectGroupTotalCount.value = item.isCollect
+    ? collectGroupTotalCount.value + 1
+    : collectGroupTotalCount.value - 1;
 }
+
 onMounted(() => {
-  getList();
+  getGroupList();
 });
 </script>
 

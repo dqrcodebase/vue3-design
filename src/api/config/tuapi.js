@@ -7,4 +7,6 @@ export default {
   register: '/1.0.0/Account/Register', // 注册
   GetUserInfo: '/1.0.0/User/GetUserInfo', // 获取用户信息
   GetCrcode: 'api/account-admin/wechat/qrcode', // 获取二维码 用于微信扫码登录
+  GetCollectionGroupList: '/1.0.0/User/GetCollectionGroupList', // 获取分组收藏图案
+  GetMyCollectCreations: '/1.0.0/Creation/GetMyCollectCreations', // 获取收藏图案
 };

@@ -23,16 +23,16 @@
           <template v-if="!filtreInput">
             <!-- 由于组件是通过变量引用而不是基于字符串组件名注册的，
               在 <script setup> 中要使用动态组件的时候，应该使用动态的 :is 来绑定 -->
-            <keep-alive :exclude="excludeComponent">
+            <!-- <keep-alive :exclude="excludeComponent"> -->
               <component :ref="(el) => {setRef(el,activeListComponent)}" :is="componentList[activeListComponent]" />
-            </keep-alive>
+            <!-- </keep-alive> -->
           </template>
           <component v-else :is="componentList[filtrateListComponent]" :input="filtreInput" />
         </div>
       </div>
 
       <!-- 列表展示区域尺寸控制 -->
-      <div class="control-aside-size flex-c-b" ref="asideSize" @click="changeAsideSize">
+      <div class="control-aside-size flex-c-e" ref="asideSize" @click="changeAsideSize">
         <el-icon :size="20" color="#657097"><CaretRight /></el-icon
       ></div>
     </div>

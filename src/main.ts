@@ -3,7 +3,7 @@ import ElementPlus from 'element-plus';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import VueLazyload from 'vue-lazyload';
 import 'element-plus/dist/index.css';
-import '@styles/common.less';
+import '@styles/index.less';
 import '@styles/init.less';
 import '@styles/theme.less'
 

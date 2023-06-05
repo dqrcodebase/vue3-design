@@ -1,6 +1,6 @@
 <template>
   <aside-list-skeleton v-if="getListloading && collectList.length === 0" />
-  <div v-if="isGroup" class="group-wrap"> 3333</div>
+  <div v-if="isGroup" class="group-wrap flex-v"> 66666</div>
   <div v-else class="list-component-wrap">
     <list-component
       class="list-component"
@@ -9,20 +9,20 @@
       :noMore="noMore"
       @changeCollectState="changeCollectState"
       @load="getMoreData">
-      <div class="space-between list-head">
+      <div class="flex-c-b list-head">
         <span class="left">收藏({{ collectTotalCount }})</span>
         <span class="right">管理</span>
       </div>
       <template v-slot:list>
-        <div class="group-list-detail flex justify-start flex-wrap">
+        <div class="group-list-detail">
           <div class="group-list">
-            <div v-for="item in 10" class="group-item flex justify-between flex-direction-column">
+            <div v-for="item in 10" class="group-item">
               <div class="group-box">
                 <img
                   src="https://chdesign.oss-cn-shanghai.aliyuncs.com/Thumbnail/Iyw/Tu/Creation/20220228/95025/ge2tonrthe2demrqg4ydonrvge2tqnbonjygoxzsha2xqmrygu.jpg?x-oss-process=image/resize,w_900"
                   alt="" />
               </div>
-              <div class="group-title">默认收藏夹</div>
+              <div class="group-title font-14 mt-10">默认收藏夹</div>
             </div>
           </div>
         </div>

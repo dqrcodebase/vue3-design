@@ -45,7 +45,7 @@ module.exports = {
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'less',
-      patterns: [path.resolve(__dirname, './src/assets/styles/common.less')],
+      patterns: [path.resolve(__dirname, './src/assets/styles/mixins/index.less')],
     },
   },
   configureWebpack: {

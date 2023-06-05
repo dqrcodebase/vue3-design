@@ -1,7 +1,7 @@
 <template>
   <!-- 推荐图案列表 -->
 
-  <div v-if="isGroup" class="group-wrap">
+  <div v-if="isGroup" class="group-wrap flex-v">
     <aside-list-skeleton v-if="getListloading" />
     <el-scrollbar>
       <div class="list-component-wrap group">
@@ -14,7 +14,7 @@
               (items) => changeGroupCollectState(items, item)
             ">
             <template v-slot:immobilization>
-              <div class="space-between list-head">
+              <div class="flex-c-b list-head">
                 <span class="left">{{ item.name }}</span>
                 <span class="right" @click="moreHandle(item, prop)"
                   >更多<el-icon :size="14"> <ArrowRight /> </el-icon

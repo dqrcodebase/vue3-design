@@ -8,7 +8,7 @@
       :noMore="noMore"
       @changeCollectState="changeCollectState"
       @load="getMoreData">
-      <div class="space-between list-head">
+      <div class="flex-c-b list-head">
         <span class="left">收藏({{ collectTotalCount }})</span>
         <span class="right">管理</span>
       </div></list-component

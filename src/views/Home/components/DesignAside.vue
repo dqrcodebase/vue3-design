@@ -5,7 +5,7 @@
 
     <!-- 列表展示框 -->
     <div class="aside-list" :class="{ 'is-hide': asideIsMini }">
-      <div class="template-components">
+      <div class="template-components flex-v">
         <div class="design-gallery-top">
           <!-- 筛选 -->
           <filtrate-list class="filtrate-list" @query="queryListHandle" />
@@ -32,7 +32,7 @@
       </div>
 
       <!-- 列表展示区域尺寸控制 -->
-      <div class="control-aside-size" ref="asideSize" @click="changeAsideSize">
+      <div class="control-aside-size flex-c-b" ref="asideSize" @click="changeAsideSize">
         <el-icon :size="20" color="#657097"><CaretRight /></el-icon
       ></div>
     </div>

@@ -18,16 +18,17 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useListOption } from '@/hooks/useAsideList';
+import { useListOption, useMoreListData } from '@/hooks/useAsideList';
 import { useList } from './Hooks/useTemplateList';
 
 const oneselfList = ref([]);
 const collectTotalCount = ref(0);
 const { getListloading, noMore, getListParems } = useListOption();
-getListParems.value.templateType = 3;
+
+
 async function getList() {
   const params = {
-    templateType: 2,
+    templateType: 3,
     ...getListParems.value,
   };
   const { list, totalCount } = await useList('GetTemplateList', params);
@@ -38,8 +39,7 @@ async function getList() {
 }
 
 function getMoreData() {
-  getListParems.value.pageIndex += 1;
-  getList();
+  useMoreListData()
 }
 onMounted(() => {
   getList();

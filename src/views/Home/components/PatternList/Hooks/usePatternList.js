@@ -5,13 +5,14 @@ import {
 
 export async function useMoreList() {
   const { noMore } = useListOption();
-  console.log('🚀 ~ file: useTemplateList.js:8 ~ useMoreList ~ noMore:', noMore);
   noMore.value = true;
 }
 
 export async function useList(method, params) {
+
   let list = [];
   let totalCount = 0;
+
   await getData(method, params, { extra: false }).then((res) => {
     try {
       totalCount = res.totalCount;
@@ -20,5 +21,6 @@ export async function useList(method, params) {
       console.log(error);
     }
   });
+  
   return { list, totalCount };
 }

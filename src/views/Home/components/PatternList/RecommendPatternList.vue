@@ -53,7 +53,7 @@ import AsideListSkeleton from '@/components/AsideListSkeleton';
 import { useListOption, useCollectState } from '@/hooks/useAsideList';
 import { getCookie } from '@/utils/cache';
 import { useUserStore } from '@/store/user';
-import { useList, useMoreList } from './Hooks/useTemplateList';
+import { useList, useMoreList } from './Hooks/usePatternList';
 
 // 用户store
 const userStore = useUserStore();

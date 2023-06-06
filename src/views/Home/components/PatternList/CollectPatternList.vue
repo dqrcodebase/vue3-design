@@ -29,9 +29,10 @@
     </list-component>
   </div>
   <div v-show="!isGroup" class="list-component-wrap">
+    {{ getListloading }}
     <list-component
       class="list-component"
-      :list="collectList"
+      :list="noGroupData.list"
       :loading="getListloading"
       :noMore="noMore"
       @load="getMoreData"
@@ -48,19 +49,21 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useListOption, useCollectState } from '@/hooks/useAsideList';
-import { useList } from './Hooks/useTemplateList';
+import { useListOption, useCollectState,useMoreListData } from '@/hooks/useAsideList';
+import { useList } from './Hooks/usePatternList';
 
 // 收藏列表
 const collectGroupList = ref([]);
-const collectList = ref([]);
 const collectGroupTotalCount = ref(0);
 const { getListloading, noMore, getListParems } = useListOption();
 const isGroup = ref(true);
-const noGroupData = ref({});
+const noGroupData = ref({
+  name: '',
+  list: [],
+});
 
 // 获取分组收藏列表
-async function getGroupList() {
+async function getList() {
   const params = {
     ...getListParems.value,
     mode: '1',
@@ -84,23 +87,22 @@ async function getNoGroupList(groupId) {
     sort: 'zxzp',
   };
   const { list, totalCount } = await useList('GetMyCollectCreations', params);
-  collectList.value.push(...list);
+  noGroupData.value.list.push(...list);
   getListloading.value = false;
-  noMore.value = collectGroupList.value.length >= totalCount;
+  noMore.value = noGroupData.value.list.length >= totalCount;
 }
 
 // 加载更多
 function getMoreGroupData() {
-  getListParems.value.pageIndex += 1;
-  getGroupList();
+  useMoreListData()
 }
 
 // 进入分组详情
 function enterDetailList(item) {
-  console.log("🚀 ~ file: CollectPatternList.vue:100 ~ enterDetailList ~ item:", item)
   getListParems.value.pageIndex = 1;
   isGroup.value = false
-  noGroupData.value = item;
+  noGroupData.value.name = item.name;
+  noMore.value = false
   getNoGroupList(item.groupId);
 }
 
@@ -109,7 +111,7 @@ function backGroup() {
   isGroup.value = true;
   getListParems.value.pageIndex = 1;
   noGroupData.value = {};
-  noMore.value = false;
+  noMore.value = collectGroupTotalCount.value <= collectGroupList.value.length;
 }
 
 // 修改收藏状态

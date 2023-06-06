@@ -48,10 +48,7 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useAsideStore } from '@/store/aside';
-import {
-  useListOption,
-  useCollectState,
-} from '@/hooks/useAsideList';
+import { useListOption, useCollectState } from '@/hooks/useAsideList';
 import { getCookie } from '@/utils/cache';
 import { useUserStore } from '@/store/user';
 import { useList, useMoreList } from './Hooks/useTemplateList';
@@ -72,16 +69,11 @@ const { getData } = getCurrentInstance().appContext.config.globalProperties;
 
 function getTemplateListNew() {
   getListloading.value = true;
-  getData(
-    'GetTemplateListNew',
-    {
-      modeType: '0',
-      pageIndex: 1,
-      pageSize: 50,
-      templateType: 1,
-    },
-    { extra: true },
-  ).then((res) => {
+  const params = {
+    templateType: 1,
+    ...getListParems.value,
+  };
+  getData('GetTemplateListNew', params, { extra: true }).then((res) => {
     getListloading.value = false;
     groupRecommendTemplateList.value.push(...res.data);
   });

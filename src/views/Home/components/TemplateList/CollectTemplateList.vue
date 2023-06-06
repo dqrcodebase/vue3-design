@@ -27,7 +27,7 @@ import { useList } from './Hooks/useTemplateList';
 const collectList = ref([]);
 const collectTotalCount = ref(0);
 const { getListloading, noMore, getListParems } = useListOption();
-getListParems.value.templateType = 2;
+
 async function getList() {
   const params = {
     templateType: 2,
@@ -39,10 +39,12 @@ async function getList() {
   getListloading.value = false;
   noMore.value = collectList.value.length >= totalCount;
 }
+
 function getMoreData() {
   getListParems.value.pageIndex += 1;
   getList();
 }
+
 async function changeCollectState(items) {
   const item = await useCollectState(items);
   collectTotalCount.value = item.isCollect

@@ -9,7 +9,7 @@
       :infinite-scroll-distance="200">
       <template v-if="list.length > 0">
         <slot name="list">
-          <ul class="list" >
+          <ul class="list">
             <li class="item" v-for="item in list" :key="item.tId">
               <div
                 v-if="isShowCollect"
@@ -22,11 +22,11 @@
             </li>
           </ul>
         </slot>
-      <ListFooter v-if="isShowFooter" :noMore="noMore" />
-    </template>
-    <div v-else class="show-empty">
-      <no-data />
-    </div>
+        <ListFooter v-if="isShowFooter" :noMore="noMore" />
+      </template>
+      <div v-else class="show-empty">
+        <no-data />
+      </div>
     </div>
   </el-scrollbar>
 </template>

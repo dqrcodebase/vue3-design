@@ -85,7 +85,6 @@ const componentList = {
 };
 
 watch(asideActiveType, (newVal) => {
-  console.log("🚀 ~ file: DesignAside.vue:86 ~ watch ~ newVal:", newVal)
   tabsPanel.value = newVal.listComponentData && newVal.listComponentData.tabPanel;
 
 });

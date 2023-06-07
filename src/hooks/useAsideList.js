@@ -1,26 +1,7 @@
-import { ref } from 'vue';
 import getData from '@api/index';
 import { useAsideStore } from '@/store/aside';
 
 const asideStore = useAsideStore();
-
-
-export function useListOption() {
-
-  const getListloading = ref(true);
-  const noMore = ref(false);
-  const getListParems = ref({
-    pageIndex: 1,
-    pageSize: 50,
-  });
-
-  return {
-    getListParems,
-    getListloading,
-    noMore,
-  };
-}
-
 
 export async function useCollectState(item) {
 
@@ -47,7 +28,3 @@ export function useKeepAlive() {
   }
 }
 
-export async function useMoreListData() {
-  getListParems.value.pageIndex += 1;
-  getList();
-}

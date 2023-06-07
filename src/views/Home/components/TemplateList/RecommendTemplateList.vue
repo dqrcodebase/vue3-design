@@ -48,7 +48,11 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useAsideStore } from '@/store/aside';
-import { useListOption, useCollectState } from '@/hooks/useAsideList';
+import {
+  useListOption,
+  useCollectState,
+} from '@/hooks/useAsideList';
+import useCommonList from '@/hooks/useCommonList';
 import { getCookie } from '@/utils/cache';
 import { useUserStore } from '@/store/user';
 import { useList, useMoreList } from './Hooks/useTemplateList';
@@ -62,7 +66,8 @@ const noGroupData = ref({
   name: '',
   list: [],
 });
-const { getListloading, noMore, getListParems } = useListOption();
+const { getListloading, noMore, getListParems,useMoreListData } = useCommonList();
+
 getListParems.value.templateType = 1;
 const asideIsMini = computed(() => asideStore.asideIsMini);
 const { getData } = getCurrentInstance().appContext.config.globalProperties;
@@ -78,6 +83,17 @@ function getTemplateListNew() {
     groupRecommendTemplateList.value.push(...res.data);
   });
 }
+
+async function getTemplateList() {
+  const params = {
+    templateType: 1,
+    ...getListParems.value,
+  };
+  const { list, totalCount } = await useList('GetTemplateList', params);
+  noGroupData.value.list.push(...list);
+  noMore.value = noGroupData.value.list.length >= totalCount;
+}
+
 // 展示更多列表
 function moreHandle(item) {
   isGroup.value = false;
@@ -96,15 +112,9 @@ function backGroup() {
 }
 // 加载更多
 async function getMoreData() {
-  getListParems.value.kId = noGroupData.value.kId;
-  getListParems.value.pageIndex += 1;
-  const params = {
-    templateType: 1,
-    ...getListParems.value,
-  };
-  const { list, totalCount } = await useList('GetTemplateList', params);
-  noGroupData.value.list.push(...list);
-  noMore.value = noGroupData.value.list.length >= totalCount;
+  console.log("🚀 ~ file: RecommendTemplateList.vue:115 ~ getMoreData ~ getMoreData:")
+  useMoreListData();
+  getTemplateList()
 }
 // 分组列表
 function groupItemList(item) {

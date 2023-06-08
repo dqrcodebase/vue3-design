@@ -9,14 +9,16 @@
           <list-component
             class="list-component"
             :isShowFooter="false"
-            :list="groupItemList(item)"
+            :list="groupItemList(item, asideIsMini)"
             @changeCollectState="
               (items) => changeGroupCollectState(items, item)
             ">
             <template v-slot:immobilization>
               <div class="flex-c-b list-head">
                 <span class="left">{{ item.name }}</span>
-                <span class="right" @click="moreHandle(item, prop)"
+                <span
+                  class="right"
+                  @click="recommendPatternmoreHandle(item, prop)"
                   >更多<el-icon :size="14"> <ArrowRight /> </el-icon
                 ></span>
               </div>
@@ -50,16 +52,15 @@ import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useAsideStore } from '@/store/aside';
 import ListComponent from '@/components/List';
 import AsideListSkeleton from '@/components/AsideListSkeleton';
-import { useListOption, useCollectState } from '@/hooks/useAsideList';
+import { useCollectState } from '@/hooks/useAsideList';
 import { getCookie } from '@/utils/cache';
 import { useUserStore } from '@/store/user';
 import { useList, useMoreList } from './Hooks/usePatternList';
+import useCommonList from '@/hooks/useCommonList';
 
 // 用户store
 const userStore = useUserStore();
 const asideStore = useAsideStore();
-// 当前列表是否分组
-const isGroup = ref(true);
 const groupRecommendList = ref({
   mentality: {
     name: '智能推荐',
@@ -77,13 +78,21 @@ const groupRecommendList = ref({
     items: [],
   },
 });
-const noGroupData = ref({
-  name: '',
-  type: '',
-  kId: '',
-  list: [],
-});
-const { getListloading, noMore, getListParems } = useListOption();
+
+const {
+  getListloading,
+  noMore,
+  getListParems,
+  isGroup,
+  groupItemList,
+  moreHandle,
+  noGroupData,
+  backGroup
+} = useCommonList();
+
+noGroupData.value.type = ''
+noGroupData.value.kId = ''
+
 getListParems.value.templateType = 1;
 const asideIsMini = computed(() => asideStore.asideIsMini);
 const { getData } = getCurrentInstance().appContext.config.globalProperties;
@@ -131,22 +140,12 @@ async function getMaterialList() {
 }
 
 // 展示更多列表
-function moreHandle(item, prop) {
-  isGroup.value = false;
-  noGroupData.value.name = item.name;
-  noGroupData.value.list = [...item.items];
-  noGroupData.value.kId = item.kId;
+function recommendPatternmoreHandle(item, prop) {
+  console.log("🚀 ~ file: RecommendPatternList.vue:145 ~ recommendPatternmoreHandle ~ item:", item)
   noGroupData.value.type = prop;
-  getListParems.value.kId = noGroupData.value.kId;
-  getListParems.value.pageIndex = 0;
+  moreHandle(item);
 }
-// 返回分组列表
-function backGroup() {
-  isGroup.value = true;
-  getListParems.value.pageIndex = 0;
-  noGroupData.value.list = [];
-  noMore.value = false;
-}
+
 // 加载更多
 async function getMoreData() {
   getListParems.value.kId = noGroupData.value.kId;
@@ -166,13 +165,6 @@ async function getMoreData() {
     noGroupData.value.list.push(...res.data.list);
     noMore.value = noGroupData.value.list.length >= res.data.totalCount;
   }
-}
-// 分组列表
-function groupItemList(item) {
-  const value = asideIsMini.value
-    ? item.items.filter((it, index) => index < 4)
-    : item.items.filter((it, index) => index < 12);
-  return value;
 }
 // 收藏图案
 function changeGroupCollectState(items, item) {

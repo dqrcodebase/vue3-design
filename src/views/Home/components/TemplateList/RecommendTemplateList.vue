@@ -5,11 +5,11 @@
     <aside-list-skeleton v-if="getListloading" />
     <el-scrollbar>
       <div class="list-component-wrap group">
-        <div v-for="item in groupRecommendTemplateList" :key="item.kId">
+        <div v-for="item in defaultList" :key="item.kId">
           <list-component
             class="list-component"
             :isShowFooter="false"
-            :list="groupItemList(item)"
+            :list="groupItemList(item,asideIsMini)"
             @changeCollectState="
               (items) => changeGroupCollectState(items, item)
             ">
@@ -48,27 +48,29 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useAsideStore } from '@/store/aside';
-import {
-  useListOption,
-  useCollectState,
-} from '@/hooks/useAsideList';
+import { useCollectState } from '@/hooks/useAsideList';
 import useCommonList from '@/hooks/useCommonList';
 import { getCookie } from '@/utils/cache';
 import { useUserStore } from '@/store/user';
-import { useList, useMoreList } from './Hooks/useTemplateList';
+import { useList } from './Hooks/useTemplateList';
 
 // 用户store
 const userStore = useUserStore();
 const asideStore = useAsideStore();
-const isGroup = ref(true);
-const groupRecommendTemplateList = ref([]);
-const noGroupData = ref({
-  name: '',
-  list: [],
-});
-const { getListloading, noMore, getListParems,useMoreListData } = useCommonList();
 
-getListParems.value.templateType = 1;
+const {
+  getListloading,
+  noMore,
+  getListParems,
+  useMoreListData,
+  noGroupData,
+  isGroup,
+  groupItemList,
+  moreHandle,
+  backGroup,
+  defaultList
+} = useCommonList();
+
 const asideIsMini = computed(() => asideStore.asideIsMini);
 const { getData } = getCurrentInstance().appContext.config.globalProperties;
 
@@ -80,7 +82,9 @@ function getTemplateListNew() {
   };
   getData('GetTemplateListNew', params, { extra: true }).then((res) => {
     getListloading.value = false;
-    groupRecommendTemplateList.value.push(...res.data);
+    console.log("🚀 ~ file: RecommendTemplateList.vue:86 ~ getData ~ defaultList:", defaultList)
+
+    defaultList.value.push(...res.data);
   });
 }
 
@@ -94,35 +98,12 @@ async function getTemplateList() {
   noMore.value = noGroupData.value.list.length >= totalCount;
 }
 
-// 展示更多列表
-function moreHandle(item) {
-  isGroup.value = false;
-  noGroupData.value.name = item.name;
-  noGroupData.value.list = [...item.items];
-  noGroupData.value.kId = item.kId;
-  getListParems.value.kId = noGroupData.value.kId;
-  getListParems.value.pageIndex = 0;
-}
-// 返回分组列表
-function backGroup() {
-  isGroup.value = true;
-  getListParems.value.pageIndex = 0;
-  noGroupData.value.list = [];
-  noMore.value = false;
-}
 // 加载更多
 async function getMoreData() {
-  console.log("🚀 ~ file: RecommendTemplateList.vue:115 ~ getMoreData ~ getMoreData:")
   useMoreListData();
-  getTemplateList()
+  getTemplateList();
 }
-// 分组列表
-function groupItemList(item) {
-  const value = asideIsMini.value
-    ? item.items.filter((it, index) => index < 4)
-    : item.items.filter((it, index) => index < 12);
-  return value;
-}
+
 // 收藏样版
 function changeGroupCollectState(items, item) {
   if (!getCookie('iyuanwu_token')) {
@@ -131,7 +112,7 @@ function changeGroupCollectState(items, item) {
   const params = { tId: items.tId };
   getData('CollectTemplate', params, { extra: true }).then((res) => {
     if (res.code === 1) {
-      groupRecommendTemplateList.value.forEach((element) => {
+      defaultList.value.forEach((element) => {
         if (element.kId === item.kId) {
           element.items.forEach((el) => {
             if (el.tId === items.tId) {

@@ -1,15 +1,15 @@
 <template>
-  <aside-list-skeleton v-if="getListloading && oneselfList.length === 0" />
+  <aside-list-skeleton v-if="getListloading && defaultList.length === 0" />
   <div class="list-component-wrap">
     <list-component
       class="list-component"
-      :list="oneselfList"
+      :list="defaultList"
       :loading="getListloading"
       :noMore="noMore"
       :isShowCollect="false"
       @load="getMoreData">
       <div class="flex-c-b list-head">
-        <span class="left">定制({{ collectTotalCount }})</span>
+        <span class="left">定制({{ totalListCount }})</span>
         <span class="right">管理</span>
       </div></list-component
     >
@@ -20,11 +20,10 @@
 import { ref, onMounted } from 'vue';
 import { useListOption, useMoreListData } from '@/hooks/useAsideList';
 import { useList } from './Hooks/useTemplateList';
+import useCommonList from '@/hooks/useCommonList';
 
-const oneselfList = ref([]);
-const collectTotalCount = ref(0);
-const { getListloading, noMore, getListParems } = useListOption();
-
+const { getListloading, noMore, getListParems, defaultList, totalListCount } =
+  useCommonList();
 
 async function getList() {
   const params = {
@@ -32,19 +31,18 @@ async function getList() {
     ...getListParems.value,
   };
   const { list, totalCount } = await useList('GetTemplateList', params);
-  collectTotalCount.value = totalCount;
-  oneselfList.value.push(...list);
+  totalListCount.value = totalCount;
+  defaultList.value.push(...list);
   getListloading.value = false;
-  noMore.value = oneselfList.value.length >= totalCount;
+  noMore.value = defaultList.value.length >= totalCount;
 }
 
 function getMoreData() {
-  useMoreListData()
+  useMoreListData();
 }
 onMounted(() => {
   getList();
 });
-
 </script>
 
 <style scoped></style>

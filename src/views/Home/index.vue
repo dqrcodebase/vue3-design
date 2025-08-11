@@ -1,3 +1,12 @@
+<!--
+ * @Author: dqr
+ * @Date: 2024-09-20 11:32:09
+ * @LastEditors: D Q R 852601818@qq.com
+ * @LastEditTime: 2025-08-05 16:02:17
+ * @FilePath: /vue3-design/src/views/Home/index.vue
+ * @Description: 
+ * 
+-->
 <template>
   <div class="design">
     <el-container>

@@ -40,6 +40,27 @@ module.exports = {
           '^/gatewayapi': '/',
         },
       },
+      '/yuce': {
+        target: 'https://yuce777.com/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/yuce': '/',
+        },
+      },
+      '/hydapi': {
+        target: 'https://www.chn-hyd.com/XMTYZX/api/services/app',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/hydapi': '/',
+        },
+      },
+       '/xmgrwhgapi': {
+        target: 'https://cloud.xmgrwhg.com/easyserpClient/datediscount/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/xmgrwhgapi': '/',
+        },
+      },
     },
   },
   configureWebpack: {

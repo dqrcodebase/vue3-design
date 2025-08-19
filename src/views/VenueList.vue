@@ -1,14 +1,36 @@
+<!--
+ * @Author: dqr
+ * @Date: 2025-08-11 16:12:01
+ * @LastEditors: D Q R 852601818@qq.com
+ * @LastEditTime: 2025-08-18 17:24:40
+ * @FilePath: /vue3-design/src/views/VenueList.vue
+ * @Description: 
+ * 
+-->
 <script setup>
 import { onMounted, getCurrentInstance } from 'vue';
 import { setCookie } from '@/utils/cache';
 import moment from 'moment';
 const { getData } = getCurrentInstance().appContext.config.globalProperties;
 const START_TIME = 1170;
+// const START_TIME = 1200;
 // billDay是当前日期的后一天
 const billDay = moment().add(1, 'day').format('YYYY-MM-DD');
-const webApiUniqueID = '806b2bbf-bb8e-82c5-1aa2-e652ee0c08b1';
-const interval = 1000 * 60 * 3
+// const billDay = moment().format('YYYY-MM-DD');
+const webApiUniqueIDList = ['806b2bbf-bb8e-82c5-1aa2-e652ee0c08b1'];
+let webApiUniqueIDIndex = 0;
+const webApiUniqueID = webApiUniqueIDList[webApiUniqueIDIndex];
+const interval = 1000 * 60 * 1;
 let isOk = false;
+let isOkVenueId = '';
+
+const idList = [
+  '2e3fd9d7-9287-4c83-8d8c-b508c6813815',
+  '0611b4da-605a-4fd0-9c8f-bbfa44934015',
+  '27ac1281-76eb-4981-a917-cc154da3da98',
+  '8347e522-aee0-42a3-9ec1-be12a70b24fb',
+];
+let idIndex = 0;
 
 function getVenueBillDataAsync(id) {
   let listVenue = [];
@@ -21,61 +43,79 @@ function getVenueBillDataAsync(id) {
     params.append('isApp', true);
     params.append('billDay', billDay);
     params.append('webApiUniqueID', webApiUniqueID);
-    getData('GetVenueBillDataAsync', params).then((res) => {
-      // const res = dataJson;
-      if (res.result.length > 0) {
-        listVenue = res.result[0].listVenue;
-        // console.log('listVenue', listVenue);
-        const listWeixinVenueStatus = res.result[0].listWeixinVenueStatus;
-        const listBillTime = res.result[0].listBillTime;
-        // console.log("🚀 ~ getVenueBillDataAsync ~ listBillTime:", listBillTime)
-        // console.log('listWeixinVenueStatus', listWeixinVenueStatus);
+    getData('GetVenueBillDataAsync', params)
+      .then((res) => {
+        // const res = dataJson;
+        if (res.result.length > 0) {
+          listVenue = res.result[0].listVenue;
+          // console.log('listVenue', listVenue);
+          const listWeixinVenueStatus = res.result[0].listWeixinVenueStatus;
+          const listBillTime = res.result[0].listBillTime;
+          // console.log("🚀 ~ getVenueBillDataAsync ~ listBillTime:", listBillTime)
+          // console.log('listWeixinVenueStatus', listWeixinVenueStatus);
 
-        const allList = [];
+          const allList = [];
 
-        listBillTime.forEach((item) => {
-          listVenue.forEach((it) => {
-            allList.push({
-              billDay: item.billDay,
-              billTime: item.billTime,
-              endTime: item.endTime,
-              startTime: item.startTime,
-              timeStart: item.timeStart,
-              timeEnd: item.timeEnd,
-              id: it.id,
-              displayName: it.displayName,
-              venueTypeDisplayName: it.venueTypeDisplayName,
-              venueTypeID: it.venueTypeID,
+          listBillTime.forEach((item) => {
+            listVenue.forEach((it) => {
+              allList.push({
+                billDay: item.billDay,
+                billTime: item.billTime,
+                endTime: item.endTime,
+                startTime: item.startTime,
+                timeStart: item.timeStart,
+                timeEnd: item.timeEnd,
+                id: it.id,
+                displayName: it.displayName,
+                venueTypeDisplayName: it.venueTypeDisplayName,
+                venueTypeID: it.venueTypeID,
+              });
             });
           });
-        });
-        // console.log('allList', allList);
+          // console.log('allList', allList);
 
-        // listWeixinVenueStatus是已经被订了的场地
-        // allList是全部场地
-        // 如果allList中的item在listWeixinVenueStatus中不存在，或者存在但是时间不冲突，那么就push到isHas中
-        allList.forEach((item) => {
-          if (
-            !listWeixinVenueStatus.some(
-              (items) =>
-                items.venueID === item.id &&
-                items.startTime === item.timeStart &&
-                items.endTime === item.timeEnd,
-            )
-          ) {
-            isHas.push(item);
+          // listWeixinVenueStatus是已经被订了的场地
+          // allList是全部场地
+          // 如果allList中的item在listWeixinVenueStatus中不存在，或者存在但是时间不冲突，那么就push到isHas中
+          allList.forEach((item) => {
+            if (
+              !listWeixinVenueStatus.some(
+                (items) =>
+                  items.venueID === item.id &&
+                  items.startTime === item.timeStart &&
+                  items.endTime === item.timeEnd,
+              )
+            ) {
+              isHas.push(item);
+            }
+          });
+          console.log('🚀 ~ getVenueBillDataAsync ~ isHas:', isHas);
+
+          if (!isHas.some((item) => item.startTime === START_TIME) && !isOk) {
+            setTimeout(() => {
+              // 打印当前时间
+              console.log('当前时间:', moment().format('YYYY-MM-DD HH:mm:ss'));
+              idIndex++;
+              if (idIndex >= idList.length) {
+                idIndex = 0;
+              }
+              getVenueBillDataAsync(idList[idIndex]);
+            }, interval);
+          } else {
+            isOkVenueId = id;
+            getVenueList(isHas);
           }
-        });
-        if (!isHas.some((item) => item.startTime === START_TIME) && !isOk) {
-          setTimeout(() => {
-            getVenueBillDataAsync(id);
-          }, interval);
         } else {
-          getVenueList(isHas);
+          setTimeout(() => {
+            console.log('当前时间:', moment().format('YYYY-MM-DD HH:mm:ss'));
+           againGetVenueBillDataAsync();
+          }, interval);
         }
-      }
-      resolve(res);
-    });
+        resolve(res);
+      })
+      .catch((err) => {
+        getVenueBillDataAsync(id);
+      });
   });
 }
 
@@ -97,16 +137,13 @@ function getVenueList(isHas) {
       }
     }
   }
-  if (list.length === 0) {
-    return;
-  }
-  console.log('-------------',list);
-  
 
   if (list[0].billTime === 60 && list.length >= 2) {
     WeiXinVenueBillAsync(list);
   } else if (list[0].billTime === 30 && list.length >= 3) {
     WeiXinVenueBillAsync(list);
+  } else {
+    againGetVenueBillDataAsync();
   }
 }
 
@@ -132,20 +169,23 @@ function WeiXinVenueBillAsync(list) {
 
     getData('WeiXinVenueBillAsync', params)
       .then((res) => {
-        GetWeiXinVenueBillOrderByRecordNoAsync(res.result)
+        GetWeiXinVenueBillOrderByRecordNoAsync(res.result);
       })
       .catch((err) => {
-        reject(err);
+       againGetVenueBillDataAsync();
+        // reject(err);
       });
   });
 }
 function GetWeiXinVenueBillOrderByRecordNoAsync(result) {
   const params = new URLSearchParams();
-    params.append('value', result.billRecordNo);
-    params.append('webApiUniqueID', webApiUniqueID);
-    getData('GetWeiXinVenueBillOrderByRecordNoAsync', params).then((res) => {
-      VenueBillPayByEmpAsync(res.result)
-    })
+  params.append('value', result.billRecordNo);
+  params.append('webApiUniqueID', webApiUniqueID);
+  getData('GetWeiXinVenueBillOrderByRecordNoAsync', params).then((res) => {
+    VenueBillPayByEmpAsync(res.result);
+  }).catch((err) => {
+    againGetVenueBillDataAsync();
+  })
 }
 
 function VenueBillPayByEmpAsync(result) {
@@ -156,20 +196,34 @@ function VenueBillPayByEmpAsync(result) {
     params.append('walletID', result.listPayInfo[0].walletID);
     params.append('webApiUniqueID', webApiUniqueID);
     getData('VenueBillPayByEmpAsync', params).then((res) => {
-      isOk = true;
-    })
+      webApiUniqueIDIndex++;
+      if (webApiUniqueIDIndex >= webApiUniqueIDList.length) {
+        isOk = true;
+      } else {
+        getVenueBillDataAsync(isOkVenueId).catch((err) => {
+          againGetVenueBillDataAsync();
+        })
+      }
+    });
   });
+}
+
+function againGetVenueBillDataAsync() {
+  idIndex++;
+  getVenueBillDataAsync(idList[idIndex]);
 }
 
 function start() {
   //  A区
+  // getVenueBillDataAsync(idList[idIndex]);
+  // // A区
   getVenueBillDataAsync('2e3fd9d7-9287-4c83-8d8c-b508c6813815');
-  // B1区
-  getVenueBillDataAsync('0611b4da-605a-4fd0-9c8f-bbfa44934015');
-  // // B2区
-  getVenueBillDataAsync('27ac1281-76eb-4981-a917-cc154da3da98');
-  // // C区
-  getVenueBillDataAsync('8347e522-aee0-42a3-9ec1-be12a70b24fb');
+  // // B1区
+  // getVenueBillDataAsync('0611b4da-605a-4fd0-9c8f-bbfa44934015');
+  // // // B2区
+  // getVenueBillDataAsync('27ac1281-76eb-4981-a917-cc154da3da98');
+  // // // C区
+  // getVenueBillDataAsync('8347e522-aee0-42a3-9ec1-be12a70b24fb');
 }
 
 onMounted(async () => {
@@ -188,44 +242,34 @@ onMounted(async () => {
   setCookie('ASP.NET_SessionId', 'ijbqacr3uqsqjzf322bp2g3r');
   setCookie(
     '.AspNet.ApplicationCookie',
-    'N6m4ss_D8Ts2DlvErO_djv10TQy2yqXkF0Adtr0NZ6xwuwMxlfEnMHLh0-DsKE3zWYCd-g3Tsu_7x1txwYJk3LbuccilErsbm7NHYD6ZCdKvjGtRC0IZ6fI26SWiRpLnrOakMECulTMIKg3i364yIokRkf9pjCuTjz6caQDS6tjN-ZTMQ-cspBZw6F2IA2L_OvzrLs-Ak_JXS5rClREkifLbwxkIYumSLcaH_GzPL16mCXo-PeZkTjAqyNTJytpzLP0UKA82ejPHqzHMoMhuHcoNlnpSSxFY9bQZ5N9XerU5QIKqTkuP6jHID0oswzMSwIEY2TTHNnPt8imk2KUDKoEMUFL4A6NtDsoLatODIZoXAmPZ4YjTprjYZ7bYPm6n39ljYypVvG4Q69fWSCFlyQqmBRk4n0J1eAfL4lc_c36yO7u9c1C2ro_2EgJS2y-QS6K2Eu05lX4nRtzGyK7fTEXzp0I_-JthzvznXc2XB1DhIovVSj8RPYItbq7CqSdnjdUhNP40yOFrgOcRPnFDafQnd0AYUonjJ_6QUomlSXS1t7ys0rgTt30K_3RQTBfeddMNN-nx1BZdYai6dLu76mz1We1aJBUq0qKMCwTWDn_51-Jm',
+    'VAd2RNdGBB3iSsOEeY9e-Zo3BzFjNCtd4fNCN7z5T_MhVArS7qzpJIFKjE4Pvi2BGcvpqPnZnaJAf2dZHAPyVrGFNHfNHnplvgQgkd6Bq0bw24WibiByi0X-IRPzMjywLSctut8p_tloxS-PriWePJzxk618oly4AjJWPVFeXVoIKXsUgS7pgoBgjsOTZkIY2NbNVueKkp7YcJg9CnQLP2uruIT0hWdukD-ajdhWZrV0Lz7fMrFlKWQaz0noizOkc0oLAAIs-3b-OOLXy06BzV_HODTKPrpvSBf5pcRCcULB6BQsIE6gqupL1LsSZlYhFTuqKQUGEWv2EjVDFizuLsxDwmp9d6sEwbpjzhScAQuz70GeumRD-UlWIQyALl2z7g1vFgNZ3ktVW67c4zRS9Go3eV-1rQZ-AFsMnWQGHx780CbdryvVQD1L1XvFO6SAxpqyK3NDgk5wKNp6KrcdC1-JOv87VAzh3HiK6fvih0rqeZalZjhXVQ0cJ4qmUeOTCvARkZXN2c-NNTgqSU6c43LqwFq3Wy4ByzjX-Vilut46MUwm2b3M8PYwl1KBBKheKx2Ri4Otbnlt3bo1SC1dwwrciS3wjhQoNYHzoOiBO-AXwGBH',
   );
   setCookie(
     '__RequestVerificationToken_L1hNVFlaWA2',
-    '6BbK3wkvrt0OGqIt8zjlJsa5VR2gn45s1mhvPObdZjzRrRkBm0hdGrOODQkBkEF6MTslB1IJmDF85Lhn9r-Q7TChEXc1',
+    'xnWT58b9OmmqXonta547kaxxkTAgdgEymwd1Iww0LtcM2tkgmB8xYE0CcfM4gDb8XYHIaHHOmm0_IPhh9tP-G6OOGJ01',
   );
   setCookie(
     'XSRF-TOKEN',
-    '-_kztCTJ2Yh12syTTjAvijb0sSWy7bBGZNstByOGKJSOIOjUvOlwrd6tivxJM7_3LadKtMhL8fLhlOIvnATaEo__kEG8j5sjVU5gGenapTmSeVI1tipgkhvfC49vmUl34KtbxA2',
+    'kmdD6g8nyNK3WCPAx3f6TZBIkuTRm1YL5kINMNaM7hobSAEwMw0FuFwnH6aXyEWuyRQDK2sa66nhpgW8a3hIbU1i_H0F8dErLlbYfZ-ooMN1SROVKviJm4XA-Cyj_mJHPkC-Ng2',
   );
 
-  // const params = new URLSearchParams();
-  // params.append('webApiUniqueID', '806b2bbf-bb8e-82c5-1aa2-e652ee0c08b1');
-  // getData('GetShopBillVenueTypeAsync', params);
+  const ws = new WebSocket('ws://localhost:3000');
 
-  // const params = new URLSearchParams();
-  // params.append('webApiUniqueID', '806b2bbf-bb8e-82c5-1aa2-e652ee0c08b1');
-  // params.append('id', '08abed5d-6e76-4c7a-a1a2-aeaf38a38a0d');
-  // getData('GetEntityByIdAsync', params);
-
-  //  start();
-  // 每天11点50分启动
-  // setInterval(() => {
-  //   const date = new Date();
-  //   const hour = date.getHours();
-  //   const minute = date.getMinutes();
-  //   console.log("🚀 ~ minute:", minute)
-  //   if (hour === 11 && minute === 50) {
-  //     start();
-  //   }
-  // }, 60000);
-
- 
+  ws.onopen = () => console.log('已连接服务器');
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.type === 'task') {
+      console.log('收到后端触发消息: ' + data.message);
+      start();
+    }
+  };
 });
 </script>
 
 <template>
-  <div> </div>
+  <button @click="start" style="font-size: 30px; margin: 100px 0 0 100px">
+    开始
+  </button>
 </template>
 
 <style scoped lang="scss"></style>

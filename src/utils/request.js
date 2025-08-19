@@ -1,10 +1,19 @@
+/*
+ * @Author: dqr
+ * @Date: 2024-09-20 11:32:09
+ * @LastEditors: D Q R 852601818@qq.com
+ * @LastEditTime: 2025-08-14 09:07:22
+ * @FilePath: /vue3-design/src/utils/request.js
+ * @Description: 
+ * 
+ */
 import Axios from 'axios';
 import { ElNotification } from 'element-plus';
 import { isNumber } from 'element-plus/es/utils';
 
 let notification = null;
 const server = Axios.create({
-  timeout: 60000,
+  timeout: 1000 * 60 * 3,
   onUploadProgress: (progressEvent) => {
     console.log(progressEvent);
   },
